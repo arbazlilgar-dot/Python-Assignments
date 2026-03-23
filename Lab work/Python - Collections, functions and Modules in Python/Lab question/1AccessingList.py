@@ -3,6 +3,7 @@ my_list = [10, "Hello", 3.14, True]
 print("My List:", my_list)
 
 
+
 # 2. Write a Python program to access elements at different index positions.
 my_list = [10, 20, 30, 40, 50]
 
