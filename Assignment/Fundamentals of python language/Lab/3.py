@@ -3,7 +3,7 @@
 studentmarks = 85
 passingmarks = 35
 
-# checking if student is pass or fail
+# check karega student pass hai ya fail 
 if studentmarks >= passingmarks:
     print("Student has passed the exam.")
 else:

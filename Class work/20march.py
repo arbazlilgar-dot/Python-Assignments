@@ -10,8 +10,12 @@
 # y = lambda n:n*n
 # print(y(8))
 
-fruits = ["apple","banana","cherry","kiwi","mango"]
+fruits = ["apple","banana","cherry","nana","kiwi","mango"]
 
-newlist = [x for x in fruits if "a" in x]
+fruits.sort()
+print(fruits)
 
-print(newlist)
+
+# newlist = [x for x in fruits if "a" in x]
+
+# print(newlist)

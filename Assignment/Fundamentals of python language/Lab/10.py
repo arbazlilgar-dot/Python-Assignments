@@ -1,6 +1,6 @@
 # Practical Example 6: Write a Python program to check if a number is prime using if_else.
 
-num = 10
+num = 7
 prime = True
 
 # checking prime condition by dividing number

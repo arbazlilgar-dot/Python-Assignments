@@ -2,5 +2,5 @@
 
 price = 99.99
 
-# checking type of price variable
+
 print(type(price))
