@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Passenger details — RedBooking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<header class="app-navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand"><span class="logo"><i class="bi bi-bus-front-fill"></i></span>Red<b>Booking</b></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="listing.html" class="active">Bus Tickets</a></li>
+        <li><a href="#">Offers</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="bookings.html">My Bookings</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="auth.html" class="btn btn-ghost">Login</a>
+        <a href="auth.html" class="btn btn-primary">Sign up</a>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Menu"><i class="bi bi-list"></i></button>
+      </div>
+    </div>
+    <nav class="mobile-menu" data-mobile-menu>
+      <a href="index.html">Home</a><a href="listing.html">Bus Tickets</a><a href="bookings.html">My Bookings</a><a href="auth.html">Login / Signup</a>
+    </nav>
+  </div>
+</header>
+
+<section class="container" style="padding: 32px 0 80px;">
+  <div class="seat-page-grid">
+    <div>
+      <form class="panel" data-validate data-next="payment.html">
+        <h4>Passenger details</h4>
+        <p style="margin-bottom:24px">Enter details as per government ID. Each passenger needs a valid ID for travel.</p>
+
+        <div data-passenger-list></div>
+
+        <div class="divider-line"></div>
+
+        <h4>Contact details</h4>
+        <p style="margin-bottom:16px">Your ticket and trip updates will be sent here.</p>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="label">Email</label><input type="email" class="input" required placeholder="you@email.com" /></div>
+          <div class="col-md-6"><label class="label">Phone</label><input type="tel" class="input" required placeholder="+91 9876543210" /></div>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <label class="check"><input type="checkbox" /> I have a GST number (optional)</label>
+        <label class="check"><input type="checkbox" checked /> Send booking updates on WhatsApp</label>
+
+        <div class="sticky-cta">
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to payment <i class="bi bi-arrow-right"></i></button>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <div class="panel" style="position:sticky; top:90px;">
+        <h4>Booking summary</h4>
+        <div style="padding: 12px 0; border-bottom: 1px dashed var(--color-border)">
+          <div style="font-weight:700">Bengaluru → Hyderabad</div>
+          <div style="color:var(--color-text-muted); font-size:.85rem; margin-top:4px">Tue, 12 Nov · 22:30</div>
+        </div>
+        <div style="padding: 12px 0; border-bottom: 1px dashed var(--color-border)">
+          <div style="font-weight:600">VRL Travels</div>
+          <div style="color:var(--color-text-muted); font-size:.85rem">Volvo A/C Sleeper · Seats L6, L7</div>
+        </div>
+        <div class="summary-row"><span>Base fare (2 seats)</span><span class="v">₹1,198</span></div>
+        <div class="summary-row"><span>Taxes & fees</span><span class="v">₹60</span></div>
+        <div class="summary-row"><span>Discount (FIRST250)</span><span class="v" style="color:var(--color-success)">−₹250</span></div>
+        <div class="summary-row total"><span>Total</span><span>₹1,008</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login or Sign up — RedBooking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body style="background:#fff">
+
+<div class="auth-wrap">
+  <aside class="auth-aside">
+    <a href="index.html" class="nav-brand" style="color:#fff">
+      <span class="logo"><i class="bi bi-bus-front-fill"></i></span>
+      Red<b style="color:#ff7a7a">Booking</b>
+    </a>
+    <div style="position:relative; z-index:1">
+      <h2>Travel further. Spend less.</h2>
+      <p>Join 25M+ travellers who book buses on RedBooking every day.</p>
+      <ul>
+        <li><i class="bi bi-check-circle-fill"></i> Lowest prices guaranteed across 5000+ operators</li>
+        <li><i class="bi bi-check-circle-fill"></i> Instant ticket confirmation & easy cancellation</li>
+        <li><i class="bi bi-check-circle-fill"></i> 24×7 customer support, real humans</li>
+        <li><i class="bi bi-check-circle-fill"></i> Earn loyalty points on every booking</li>
+      </ul>
+    </div>
+    <div style="color:rgba(255,255,255,.5); font-size:.85rem; position:relative; z-index:1">© 2025 RedBooking</div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <h2 data-auth-title>Welcome back</h2>
+      <p class="sub" data-auth-sub>Sign in to continue your journey</p>
+
+      <div class="auth-tabs">
+        <button class="active" data-auth-tab="login">Login</button>
+        <button data-auth-tab="signup">Sign up</button>
+      </div>
+
+      <!-- Login -->
+      <form data-auth-pane="login" data-validate data-next="index.html">
+        <div class="field-stack">
+          <div><label class="label">Email or phone</label><input class="input" required placeholder="you@email.com" /></div>
+          <div><label class="label">Password</label><input class="input" type="password" required placeholder="••••••••" /></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+          <label class="check"><input type="checkbox" /> Remember me</label>
+          <a href="#" style="color:var(--color-primary); font-size:.85rem; font-weight:600">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+      </form>
+
+      <!-- Signup -->
+      <form data-auth-pane="signup" class="hidden" data-validate data-next="index.html">
+        <div class="field-stack">
+          <div><label class="label">Full name</label><input class="input" required placeholder="Your name" /></div>
+          <div><label class="label">Email</label><input class="input" type="email" required placeholder="you@email.com" /></div>
+          <div><label class="label">Phone</label><input class="input" type="tel" required placeholder="+91 9876543210" /></div>
+          <div><label class="label">Password</label><input class="input" type="password" required placeholder="Min. 8 characters" /></div>
+        </div>
+        <label class="check" style="margin-bottom:16px"><input type="checkbox" required /> I agree to the Terms & Privacy Policy</label>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Create account</button>
+      </form>
+
+      <div class="divider">or continue with</div>
+      <div class="social-row-auth">
+        <button type="button" class="social-btn"><i class="bi bi-google" style="color:#EA4335"></i> Google</button>
+        <button type="button" class="social-btn"><i class="bi bi-apple"></i> Apple</button>
+      </div>
+
+      <div class="auth-foot">
+        <a href="index.html"><i class="bi bi-arrow-left"></i> Back to home</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/script.js"></script>
+</body>
+</html>
