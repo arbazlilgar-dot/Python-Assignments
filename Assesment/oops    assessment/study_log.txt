@@ -1,0 +1,3 @@
+monday 10
+friday 5
+tuesday 11

@@ -1,0 +1,140 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Select your seats — RedBooking{% endblock %}
+
+{% block content %}
+<section class="container">
+  <div class="search-summary">
+    <div class="summary-route">
+      <div class="route"><span>{{ route.operator.name }}</span></div>
+      <div class="meta">{{ route.operator.bus_type }} · {{ route.departure_time|time:'H:i' }} → {{ route.arrival_time|time:'H:i' }} · {{ route.duration_display }}</div>
+    </div>
+    <a href="{% url 'bus_listing' %}" class="btn btn-light btn-sm"><i class="bi bi-arrow-left"></i> Back to results</a>
+  </div>
+</section>
+
+<section class="container" style="padding-bottom: 80px;">
+  <div class="seat-page-grid">
+    <div>
+      <div class="panel">
+        <div class="panel-head">
+          <h4>Select your seats</h4>
+          <span class="hint"><i class="bi bi-info-circle"></i> Tap a seat to select. You can pick up to 6 seats.</span>
+        </div>
+
+        <div class="bus-layout">
+          <div class="driver" title="Driver"><i class="bi bi-person-fill"></i></div>
+
+          {% if lower_seats %}
+          <div class="deck-label">Lower deck</div>
+          <div class="seat-grid" data-seat-grid>
+            {% for seat in lower_seats %}
+              {% if forloop.counter|divisibleby:2 and not forloop.counter|divisibleby:4 %}
+              <div class="aisle"></div>
+              {% endif %}
+              <div class="seat {% if seat.status == 'booked' %}booked{% elif seat.status == 'female' %}booked female{% endif %}" data-seat="{{ seat.seat_number }}" data-price="{{ seat.price }}" {% if seat.status == 'female' %}title="Booked by female passenger"{% endif %}>{{ seat.seat_number }}</div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="deck-label">Lower deck</div>
+          <div class="seat-grid" data-seat-grid>
+            <div class="seat" data-seat="L1">L1</div><div class="seat" data-seat="L2">L2</div><div class="aisle"></div><div class="seat booked female" data-seat="L3" title="Booked by female passenger">L3</div><div class="seat" data-seat="L4">L4</div>
+            <div class="seat" data-seat="L5">L5</div><div class="seat" data-seat="L6">L6</div><div class="aisle"></div><div class="seat" data-seat="L7">L7</div><div class="seat" data-seat="L8">L8</div>
+            <div class="seat booked" data-seat="L9">L9</div><div class="seat booked" data-seat="L10">L10</div><div class="aisle"></div><div class="seat" data-seat="L11">L11</div><div class="seat" data-seat="L12">L12</div>
+            <div class="seat" data-seat="L13">L13</div><div class="seat" data-seat="L14">L14</div><div class="aisle"></div><div class="seat" data-seat="L15">L15</div><div class="seat booked" data-seat="L16">L16</div>
+            <div class="seat" data-seat="L17">L17</div><div class="seat" data-seat="L18">L18</div><div class="aisle"></div><div class="seat" data-seat="L19">L19</div><div class="seat" data-seat="L20">L20</div>
+          </div>
+          {% endif %}
+
+          {% if upper_seats %}
+          <div class="deck-label" style="margin-top:24px">Upper deck</div>
+          <div class="seat-grid" data-seat-grid>
+            {% for seat in upper_seats %}
+              {% if forloop.counter|divisibleby:2 and not forloop.counter|divisibleby:4 %}
+              <div class="aisle"></div>
+              {% endif %}
+              <div class="seat {% if seat.status == 'booked' %}booked{% elif seat.status == 'female' %}booked female{% endif %}" data-seat="{{ seat.seat_number }}" data-price="{{ seat.price }}" {% if seat.status == 'female' %}title="Booked by female passenger"{% endif %}>{{ seat.seat_number }}</div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="deck-label" style="margin-top:24px">Upper deck</div>
+          <div class="seat-grid" data-seat-grid>
+            <div class="seat" data-seat="U1">U1</div><div class="seat booked" data-seat="U2">U2</div><div class="aisle"></div><div class="seat" data-seat="U3">U3</div><div class="seat" data-seat="U4">U4</div>
+            <div class="seat" data-seat="U5">U5</div><div class="seat" data-seat="U6">U6</div><div class="aisle"></div><div class="seat" data-seat="U7">U7</div><div class="seat booked female" data-seat="U8" title="Booked by female passenger">U8</div>
+            <div class="seat" data-seat="U9">U9</div><div class="seat" data-seat="U10">U10</div><div class="aisle"></div><div class="seat" data-seat="U11">U11</div><div class="seat" data-seat="U12">U12</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-box"></span> Available</span>
+          <span class="legend-item"><span class="legend-box selected"></span> Selected</span>
+          <span class="legend-item"><span class="legend-box booked"></span> Booked</span>
+          <span class="legend-item"><span class="legend-box female"></span> Female booked</span>
+        </div>
+        <div class="price-tiers">
+          <span class="skeleton skeleton-pill"></span>
+          <span class="skeleton skeleton-pill"></span>
+          <span class="skeleton skeleton-pill"></span>
+          <span class="skeleton skeleton-pill"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>Boarding &amp; dropping points</h4>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <h5 style="font-size:.85rem; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:12px">Boarding</h5>
+            <div class="point-list" data-points>
+              {% for bp in boarding_points %}
+              <div class="point {% if forloop.first %}active{% endif %}"><div><div class="name">{{ bp.name }}</div><div class="addr">{{ bp.address }}</div></div><div class="time">{{ bp.time|time:'H:i' }}</div></div>
+              {% empty %}
+              <div class="point active"><div><div class="name">Madiwala</div><div class="addr">BMTC Bus stop, near Hosur Rd</div></div><div class="time">22:00</div></div>
+              <div class="point"><div><div class="name">Silk Board</div><div class="addr">Outer Ring Rd</div></div><div class="time">22:15</div></div>
+              <div class="point"><div><div class="name">Electronic City</div><div class="addr">Toll plaza</div></div><div class="time">22:45</div></div>
+              <div class="point"><div><div class="name">Majestic</div><div class="addr">KSRTC Bus stand</div></div><div class="time">21:30</div></div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h5 style="font-size:.85rem; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:12px">Dropping</h5>
+            <div class="point-list" data-points>
+              {% for dp in dropping_points %}
+              <div class="point {% if forloop.first %}active{% endif %}"><div><div class="name">{{ dp.name }}</div><div class="addr">{{ dp.address }}</div></div><div class="time">{{ dp.time|time:'H:i' }}</div></div>
+              {% empty %}
+              <div class="point active"><div><div class="name">Mehdipatnam</div><div class="addr">Bus stop</div></div><div class="time">07:00</div></div>
+              <div class="point"><div><div class="name">Lakdikapul</div><div class="addr">Metro station</div></div><div class="time">07:20</div></div>
+              <div class="point"><div><div class="name">Ameerpet</div><div class="addr">Hotel front</div></div><div class="time">07:40</div></div>
+              <div class="point"><div><div class="name">Secunderabad</div><div class="addr">Railway station</div></div><div class="time">08:10</div></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div>
+      <div class="panel summary-panel">
+        <h4>Fare summary</h4>
+        <div class="selected-list" data-selected-list>
+          <div class="empty-selected">
+            <i class="bi bi-ticket-perforated"></i>
+            <p>No seats selected yet. Pick a seat from the layout to see your fare.</p>
+          </div>
+        </div>
+        <div class="summary-row"><span>Base fare (<span data-seat-count>0</span> seat<span data-plural></span>)</span><span class="v" data-seat-price>₹0</span></div>
+        <div class="summary-row"><span>Taxes &amp; fees (5%)</span><span class="v" data-seat-tax>₹0</span></div>
+        <div class="summary-row"><span>Service fee</span><span class="v">₹0</span></div>
+        <div class="summary-row total"><span>Total payable</span><span data-seat-total>₹0</span></div>
+        <div class="alert-msg" data-seat-msg hidden></div>
+        <a href="{% url 'booking_details' route.id %}" class="btn btn-primary btn-block btn-lg" data-continue-btn aria-disabled="true" style="margin-top:16px; opacity:.6; pointer-events:none">
+          Continue <i class="bi bi-arrow-right"></i>
+        </a>
+        <p style="font-size:.78rem; color:var(--color-text-muted); margin-top:12px; text-align:center">By continuing you agree to RedBooking's Terms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

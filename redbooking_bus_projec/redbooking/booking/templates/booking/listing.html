@@ -1,0 +1,145 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Bus Tickets — RedBooking{% endblock %}
+
+{% block content %}
+<section class="container">
+  <div class="search-summary">
+    <div class="summary-route">
+      <div class="route"><span>{{ from_city }}</span><i class="bi bi-arrow-right"></i><span>{{ to_city }}</span></div>
+      <div class="meta"><i class="bi bi-calendar-event"></i> {{ travel_date }} · <span data-result-count>{{ result_count }}</span> buses found</div>
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-light btn-sm"><i class="bi bi-pencil"></i> Modify search</a>
+  </div>
+</section>
+
+<section class="container" style="padding-bottom: 64px;">
+  <div class="layout-grid">
+    <!-- Filters -->
+    <aside class="filters">
+      <div class="filter-head"><h4>Filters</h4><a data-filter-clear>Clear all</a></div>
+      <div class="filter-group">
+        <h5>Departure time</h5>
+        <div class="time-grid">
+          <button class="time-pill" data-time-pill data-time="early"><i class="bi bi-sunrise"></i>Before 6am</button>
+          <button class="time-pill" data-time-pill data-time="morning"><i class="bi bi-sun"></i>6am-12pm</button>
+          <button class="time-pill" data-time-pill data-time="afternoon"><i class="bi bi-cloud-sun"></i>12pm-6pm</button>
+          <button class="time-pill" data-time-pill data-time="night"><i class="bi bi-moon-stars"></i>After 6pm</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h5>Price range</h5>
+        <input type="range" min="299" max="2999" value="2999" data-range data-filter-price />
+        <div class="range-row"><span>₹299</span><span>Up to <strong data-range-out>₹2999</strong></span><span>₹2999</span></div>
+      </div>
+      <div class="filter-group">
+        <h5>Bus type</h5>
+        <label class="check"><input type="checkbox" data-filter-type value="ac" /> AC</label>
+        <label class="check"><input type="checkbox" data-filter-type value="nonac" /> Non-AC</label>
+        <label class="check"><input type="checkbox" data-filter-type value="sleeper" /> Sleeper</label>
+        <label class="check"><input type="checkbox" data-filter-type value="seater" /> Seater</label>
+      </div>
+      <div class="filter-group">
+        <h5>Rating</h5>
+        <label class="check"><input type="radio" name="rating" data-filter-rating value="0" checked /> Any rating</label>
+        <label class="check"><input type="radio" name="rating" data-filter-rating value="3" /> 3★ &amp; above</label>
+        <label class="check"><input type="radio" name="rating" data-filter-rating value="4" /> 4★ &amp; above</label>
+        <label class="check"><input type="radio" name="rating" data-filter-rating value="4.5" /> 4.5★ &amp; above</label>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <div>
+      <div class="results-toolbar">
+        <h3><span data-result-count>{{ result_count }}</span> buses available <span class="muted">· {{ from_city }} → {{ to_city }}</span></h3>
+        <div class="sort-control">
+          <label for="sortBy">Sort by</label>
+          <select id="sortBy" class="input" data-sort-select>
+            <option value="departure">Departure (early first)</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating-desc">Rating: High to Low</option>
+            <option value="duration-asc">Duration: Shortest</option>
+          </select>
+        </div>
+      </div>
+
+      <div data-bus-list>
+        {% for route in routes %}
+        <article class="bus-card" data-bus data-price="{{ route.price }}" data-rating="{{ route.operator.rating }}" data-types="{{ route.bus_type_tags }}" data-departure="{{ route.departure_time|time:'H:i' }}" data-duration="{{ route.duration }}">
+          <div class="bus-grid">
+            <div class="bus-info">
+              <h4>{{ route.operator.name }}</h4>
+              <div class="type">{{ route.operator.bus_type }}</div>
+              <span class="rating-pill{% if route.operator.rating < 4 %}" style="background:var(--color-warning){% endif %}"><i class="bi bi-star-fill"></i> {{ route.operator.rating }} · {{ route.operator.total_ratings }}</span>
+            </div>
+            <div class="bus-time-row">
+              <div class="time-block"><div class="t">{{ route.departure_time|time:'H:i' }}</div><div class="c">{{ route.from_city.name }}</div></div>
+              <div class="duration-line"><div>{{ route.duration_display }}</div><div class="line"></div><div>{{ route.stops }}</div></div>
+              <div class="time-block"><div class="t">{{ route.arrival_time|time:'H:i' }}</div><div class="c">{{ route.to_city.name }}</div></div>
+            </div>
+            <div class="bus-price">
+              <div class="price">₹{{ route.price|floatformat:0 }}</div>
+              <div class="seats">{{ route.seats_available }} seats left</div>
+              <a href="{% url 'seat_selection' route.id %}" class="btn btn-primary btn-sm">View seats</a>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <!-- Fallback static bus cards -->
+        <article class="bus-card" data-bus data-price="1299" data-rating="4.6" data-types="ac sleeper" data-departure="22:30" data-duration="555">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>VRL Travels</h4><div class="type">Volvo A/C Sleeper (2+1)</div><span class="rating-pill"><i class="bi bi-star-fill"></i> 4.6 · 1.2k ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">22:30</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>9h 15m</div><div class="line"></div><div>Non-stop</div></div><div class="time-block"><div class="t">07:45</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹1,299</div><div class="seats">12 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        <article class="bus-card" data-bus data-price="1599" data-rating="4.8" data-types="ac sleeper" data-departure="21:00" data-duration="600">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>SRS Travels</h4><div class="type">Mercedes Multi-axle A/C Sleeper</div><span class="rating-pill"><i class="bi bi-star-fill"></i> 4.8 · 2.4k ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">21:00</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>10h 00m</div><div class="line"></div><div>1 stop</div></div><div class="time-block"><div class="t">07:00</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹1,599</div><div class="seats">8 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        <article class="bus-card" data-bus data-price="999" data-rating="4.4" data-types="ac seater" data-departure="23:15" data-duration="525">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>Orange Tours &amp; Travels</h4><div class="type">Scania A/C Seater</div><span class="rating-pill"><i class="bi bi-star-fill"></i> 4.4 · 890 ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">23:15</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>8h 45m</div><div class="line"></div><div>Non-stop</div></div><div class="time-block"><div class="t">08:00</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹999</div><div class="seats">22 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        <article class="bus-card" data-bus data-price="649" data-rating="3.8" data-types="nonac seater" data-departure="08:00" data-duration="615">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>National Travels</h4><div class="type">Non-AC Seater (2+2)</div><span class="rating-pill" style="background:var(--color-warning)"><i class="bi bi-star-fill"></i> 3.8 · 320 ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">08:00</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>10h 15m</div><div class="line"></div><div>2 stops</div></div><div class="time-block"><div class="t">18:15</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹649</div><div class="seats">28 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        <article class="bus-card" data-bus data-price="1899" data-rating="4.9" data-types="ac sleeper" data-departure="21:30" data-duration="555">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>Zingbus Premium</h4><div class="type">Mercedes Benz A/C Sleeper · Lounge</div><span class="rating-pill"><i class="bi bi-star-fill"></i> 4.9 · 3.1k ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">21:30</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>9h 15m</div><div class="line"></div><div>Non-stop</div></div><div class="time-block"><div class="t">06:45</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹1,899</div><div class="seats">3 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        <article class="bus-card" data-bus data-price="749" data-rating="3.9" data-types="nonac sleeper" data-departure="05:30" data-duration="660">
+          <div class="bus-grid">
+            <div class="bus-info"><h4>Rajdhani Travels</h4><div class="type">Non-AC Sleeper (2+1)</div><span class="rating-pill" style="background:var(--color-warning)"><i class="bi bi-star-fill"></i> 3.9 · 280 ratings</span></div>
+            <div class="bus-time-row"><div class="time-block"><div class="t">05:30</div><div class="c">{{ from_city }}</div></div><div class="duration-line"><div>11h 00m</div><div class="line"></div><div>2 stops</div></div><div class="time-block"><div class="t">16:30</div><div class="c">{{ to_city }}</div></div></div>
+            <div class="bus-price"><div class="price">₹749</div><div class="seats">26 seats left</div><a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">View seats</a></div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="empty-state" data-empty hidden>
+        <i class="bi bi-emoji-frown"></i>
+        <h4>No buses match your filters</h4>
+        <p>Try widening the price range or clearing some filters.</p>
+        <button class="btn btn-outline-primary btn-sm" data-filter-clear>Clear all filters</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

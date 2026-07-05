@@ -1,0 +1,91 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Payment — RedBooking{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 32px 0 80px;">
+  <div class="seat-page-grid">
+    <div class="panel">
+      <h4>Choose payment method</h4>
+      <div class="pay-tabs">
+        <button class="pay-tab active" data-pay-tab="upi"><i class="bi bi-phone"></i> UPI</button>
+        <button class="pay-tab" data-pay-tab="card"><i class="bi bi-credit-card-2-front"></i> Card</button>
+        <button class="pay-tab" data-pay-tab="netbank"><i class="bi bi-bank"></i> Net Banking</button>
+        <button class="pay-tab" data-pay-tab="wallet"><i class="bi bi-wallet2"></i> Wallet</button>
+      </div>
+
+      <!-- UPI -->
+      <div class="pay-pane active" data-pay-pane="upi">
+        <label class="label">Enter UPI ID</label>
+        <input class="input" placeholder="yourname@upi" />
+        <div class="upi-row">
+          <button class="upi-app" type="button"><i class="bi bi-google"></i> GPay</button>
+          <button class="upi-app" type="button"><i class="bi bi-phone"></i> PhonePe</button>
+          <button class="upi-app" type="button"><i class="bi bi-currency-rupee"></i> Paytm</button>
+          <button class="upi-app" type="button"><i class="bi bi-bank2"></i> BHIM</button>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="pay-pane" data-pay-pane="card">
+        <div class="row g-3">
+          <div class="col-12"><label class="label">Card number</label><input class="input" placeholder="1234 5678 9012 3456" /></div>
+          <div class="col-12"><label class="label">Cardholder name</label><input class="input" placeholder="Name on card" /></div>
+          <div class="col-6"><label class="label">Expiry</label><input class="input" placeholder="MM / YY" /></div>
+          <div class="col-6"><label class="label">CVV</label><input class="input" type="password" maxlength="4" placeholder="•••" /></div>
+        </div>
+        <label class="check" style="margin-top:12px"><input type="checkbox" /> Save card for faster checkout</label>
+      </div>
+
+      <!-- Netbanking -->
+      <div class="pay-pane" data-pay-pane="netbank">
+        <label class="label">Popular banks</label>
+        <div class="bank-grid">
+          <button class="bank-tile" type="button">HDFC Bank</button>
+          <button class="bank-tile" type="button">ICICI Bank</button>
+          <button class="bank-tile" type="button">SBI</button>
+          <button class="bank-tile" type="button">Axis Bank</button>
+          <button class="bank-tile" type="button">Kotak</button>
+          <button class="bank-tile" type="button">Yes Bank</button>
+        </div>
+      </div>
+
+      <!-- Wallet -->
+      <div class="pay-pane" data-pay-pane="wallet">
+        <div class="bank-grid">
+          <button class="bank-tile" type="button"><i class="bi bi-wallet2"></i><br/>Paytm</button>
+          <button class="bank-tile" type="button"><i class="bi bi-wallet"></i><br/>MobiKwik</button>
+          <button class="bank-tile" type="button"><i class="bi bi-wallet-fill"></i><br/>Amazon Pay</button>
+          <button class="bank-tile" type="button"><i class="bi bi-wallet2"></i><br/>Freecharge</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel" style="position:sticky; top:90px;">
+        <h4>Order summary</h4>
+        <div style="padding: 12px 0; border-bottom: 1px dashed var(--color-border)">
+          <div style="font-weight:700">{{ route.from_city.name }} → {{ route.to_city.name }}</div>
+          <div style="color:var(--color-text-muted); font-size:.85rem; margin-top:4px">{{ route.departure_time|time:'H:i' }} → {{ route.arrival_time|time:'H:i' }}</div>
+        </div>
+        <div style="padding: 12px 0; border-bottom: 1px dashed var(--color-border)">
+          <div style="font-weight:600">{{ route.operator.name }}</div>
+          <div style="color:var(--color-text-muted); font-size:.85rem">{{ route.operator.bus_type }}</div>
+        </div>
+        <div class="summary-row"><span>Base fare</span><span class="v">₹{{ base_fare }}</span></div>
+        <div class="summary-row"><span>Taxes & fees</span><span class="v">₹{{ tax }}</span></div>
+        <div class="summary-row"><span>Discount</span><span class="v" style="color:var(--color-success)">−₹{{ discount }}</span></div>
+        <div class="summary-row total"><span>Total payable</span><span>₹{{ total }}</span></div>
+        <form method="post" action="{% url 'payment' route.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:16px"><i class="bi bi-shield-lock"></i> Pay ₹{{ total }} securely</button>
+        </form>
+        <div style="display:flex; gap:8px; align-items:center; justify-content:center; margin-top:12px; color:var(--color-text-muted); font-size:.78rem">
+          <i class="bi bi-shield-check"></i> 256-bit SSL secured
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

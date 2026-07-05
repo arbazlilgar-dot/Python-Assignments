@@ -1,0 +1,248 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}RedBooking — Book Bus Tickets Online{% endblock %}
+
+{% block content %}
+<!-- ===== HERO + SEARCH ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <span class="hero-eyebrow"><i class="bi bi-shield-check"></i> Trusted by 25M+ travellers</span>
+      <h1>Book bus tickets to <span>anywhere</span> in India</h1>
+      <p>5000+ operators · 100,000+ routes · Lowest prices guaranteed</p>
+    </div>
+
+    <div class="search-card">
+      <form action="{% url 'bus_listing' %}" method="get">
+        <div class="search-grid">
+          <div class="field">
+            <label>From</label>
+            <div class="field-input">
+              <i class="bi bi-geo-alt"></i>
+              <input type="text" name="from" data-autocomplete value="Bengaluru" placeholder="Leaving from" />
+            </div>
+          </div>
+          <button type="button" class="swap-btn" data-swap aria-label="Swap"><i class="bi bi-arrow-left-right"></i></button>
+          <div class="field">
+            <label>To</label>
+            <div class="field-input">
+              <i class="bi bi-geo-alt-fill"></i>
+              <input type="text" name="to" data-autocomplete value="Hyderabad" placeholder="Going to" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Date of journey</label>
+            <div class="field-input">
+              <i class="bi bi-calendar-event"></i>
+              <input type="date" name="date" />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-search"></i> Search buses</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== POPULAR ROUTES ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <div>
+        <h2>Popular routes</h2>
+        <small>Most booked routes this week</small>
+      </div>
+      <a href="{% url 'bus_listing' %}" class="btn btn-light btn-sm">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="row g-4">
+      {% for route in popular_routes %}
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from={{ route.from_city.name }}&to={{ route.to_city.name }}" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>{{ route.from_city.name }}</span><i class="bi bi-arrow-right"></i><span>{{ route.to_city.name }}</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> {{ route.operator.rating }}</span>
+          </div>
+          <div class="route-meta">
+            <span><i class="bi bi-clock"></i> {{ route.duration_display }}</span>
+            <span><i class="bi bi-bus-front"></i> {{ route.seats_available }} seats</span>
+          </div>
+          <div class="route-price">
+            <div><div class="price-from">Starts from</div><div class="price-amt">₹{{ route.price }}</div></div>
+            <span class="btn btn-outline-primary btn-sm">Book now</span>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <!-- Fallback static routes when DB is empty -->
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Bengaluru&to=Chennai" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Bengaluru</span><i class="bi bi-arrow-right"></i><span>Chennai</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.6</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 6h 30m</span><span><i class="bi bi-bus-front"></i> 86 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹499</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Mumbai&to=Pune" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Mumbai</span><i class="bi bi-arrow-right"></i><span>Pune</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.8</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 3h 15m</span><span><i class="bi bi-bus-front"></i> 142 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹299</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Delhi&to=Jaipur" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Delhi</span><i class="bi bi-arrow-right"></i><span>Jaipur</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.5</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 5h 45m</span><span><i class="bi bi-bus-front"></i> 64 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹599</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Hyderabad&to=Vijayawada" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Hyderabad</span><i class="bi bi-arrow-right"></i><span>Vijayawada</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.4</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 4h 20m</span><span><i class="bi bi-bus-front"></i> 58 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹449</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Kolkata&to=Bhubaneswar" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Kolkata</span><i class="bi bi-arrow-right"></i><span>Bhubaneswar</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.3</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 7h 10m</span><span><i class="bi bi-bus-front"></i> 42 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹699</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="{% url 'bus_listing' %}?from=Ahmedabad&to=Udaipur" class="card-base route-card d-block">
+          <div class="route-head">
+            <div class="route-cities"><span>Ahmedabad</span><i class="bi bi-arrow-right"></i><span>Udaipur</span></div>
+            <span class="rating-pill"><i class="bi bi-star-fill"></i> 4.7</span>
+          </div>
+          <div class="route-meta"><span><i class="bi bi-clock"></i> 5h 30m</span><span><i class="bi bi-bus-front"></i> 38 buses</span></div>
+          <div class="route-price"><div><div class="price-from">Starts from</div><div class="price-amt">₹549</div></div><span class="btn btn-outline-primary btn-sm">Book now</span></div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===== OFFERS ===== -->
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-title">
+      <div><h2>Offers &amp; deals</h2><small>Save more on every booking</small></div>
+    </div>
+    <div class="row g-4">
+      {% if offers %}
+        {% for offer in offers %}
+        <div class="col-md-6 col-lg-3">
+          <div class="offer-card {{ offer.color_class }}">
+            <span class="badge-tag">{{ offer.badge }}</span>
+            <h4>{{ offer.title }}</h4>
+            <span class="code">{{ offer.code }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="col-md-6 col-lg-3">
+        <div class="offer-card offer-1">
+          <span class="badge-tag">Limited time</span>
+          <h4>Flat ₹250 off on first ride</h4>
+          <span class="code">FIRST250</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="offer-card offer-2">
+          <span class="badge-tag">Weekend</span>
+          <h4>15% off on weekend trips</h4>
+          <span class="code">WKND15</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="offer-card offer-3">
+          <span class="badge-tag">Wallet</span>
+          <h4>Up to ₹150 cashback</h4>
+          <span class="code">WALLET150</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="offer-card offer-4">
+          <span class="badge-tag">Premium</span>
+          <h4>20% off on AC sleepers</h4>
+          <span class="code">SLEEP20</span>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-title"><div><h2>Why choose RedBooking</h2><small>Everything you need for a smooth journey</small></div></div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="card-base feature-card">
+          <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+          <h4>Safety first</h4>
+          <p>All operators are verified and follow strict safety standards.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card-base feature-card">
+          <div class="feature-icon"><i class="bi bi-cash-coin"></i></div>
+          <h4>Best prices</h4>
+          <p>Compare and book at the lowest fares with exclusive offers.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card-base feature-card">
+          <div class="feature-icon"><i class="bi bi-headset"></i></div>
+          <h4>24×7 support</h4>
+          <p>Real human help, anytime you need it. Chat or call us.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card-base feature-card">
+          <div class="feature-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+          <h4>Easy refunds</h4>
+          <p>Cancel anytime and get refunds straight to your account.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== APP BANNER ===== -->
+<section class="section">
+  <div class="container">
+    <div class="app-banner">
+      <div>
+        <h2>Get the RedBooking app</h2>
+        <p>Faster bookings, exclusive in-app offers, and instant ticket access on the go.</p>
+        <div class="store-row">
+          <a href="#" class="store-btn"><i class="bi bi-google-play"></i> Google Play</a>
+          <a href="#" class="store-btn"><i class="bi bi-apple"></i> App Store</a>
+        </div>
+      </div>
+      <div class="app-mock"><i class="bi bi-phone"></i></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

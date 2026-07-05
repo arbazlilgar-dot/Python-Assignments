@@ -1,0 +1,82 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}My Bookings — RedBooking{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 32px 0 80px;">
+  <div class="profile-grid">
+    <!-- Sidebar -->
+    <aside>
+      <div class="card-base profile-card">
+        <div class="avatar">{{ user.first_name.0|default:"U" }}{{ user.last_name.0|default:"" }}</div>
+        <h4>{{ user.get_full_name|default:user.username }}</h4>
+        <div class="email">{{ user.email }}</div>
+        <a href="#" class="btn btn-light btn-sm" style="margin-top:12px">Edit profile</a>
+      </div>
+      <div class="card-base" style="padding:12px; margin-top:16px">
+        <div class="profile-nav">
+          <a class="active"><i class="bi bi-ticket-perforated"></i> My bookings</a>
+          <a><i class="bi bi-person"></i> Profile</a>
+          <a><i class="bi bi-wallet2"></i> Wallet &amp; rewards</a>
+          <a><i class="bi bi-geo-alt"></i> Saved travellers</a>
+          <a><i class="bi bi-bell"></i> Notifications</a>
+          <a><i class="bi bi-gear"></i> Settings</a>
+          <a href="{% url 'logout_view' %}" style="color:var(--color-danger)"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Bookings -->
+    <div>
+      <div class="results-toolbar">
+        <h3>Your bookings <span>· {{ total_bookings }} trips</span></h3>
+        <div class="sort-row" data-bookings-tabs>
+          <button class="sort-pill active" data-tab="all">All</button>
+          <button class="sort-pill" data-tab="upcoming">Upcoming</button>
+          <button class="sort-pill" data-tab="completed">Completed</button>
+          <button class="sort-pill" data-tab="cancelled">Cancelled</button>
+        </div>
+      </div>
+
+      {% for booking in bookings %}
+      <article class="card-base booking-card" data-booking data-status="{{ booking.status }}">
+        <div class="booking-head">
+          <div>
+            <h4>{{ booking.route.from_city.name }} → {{ booking.route.to_city.name }}</h4>
+            <div class="pnr">PNR: {{ booking.pnr }} · Booked on {{ booking.booked_on|date:"d M Y" }}</div>
+          </div>
+          <span class="status-badge status-{{ booking.status }}">
+            <i class="bi bi-{% if booking.status == 'confirmed' %}check-circle{% elif booking.status == 'completed' %}check2-all{% else %}x-circle{% endif %}"></i>
+            {{ booking.get_status_display }}
+          </span>
+        </div>
+        <div class="booking-body">
+          <div><div class="lbl">Operator</div><div class="val">{{ booking.route.operator.name }} · {{ booking.route.operator.bus_type }}</div></div>
+          <div><div class="lbl">{% if booking.status == 'completed' %}Travelled{% else %}Departure{% endif %}</div><div class="val">{{ booking.route.departure_time|time:'H:i' }}</div></div>
+          <div><div class="lbl">Seats</div><div class="val">{% for s in booking.seats.all %}{{ s.seat_number }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</div></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            {% if booking.status == 'confirmed' %}
+              <button class="btn btn-light btn-sm"><i class="bi bi-download"></i> Ticket</button>
+              <button class="btn btn-outline-primary btn-sm">Cancel</button>
+            {% elif booking.status == 'completed' %}
+              <button class="btn btn-light btn-sm">Invoice</button>
+              <a href="{% url 'bus_listing' %}" class="btn btn-outline-primary btn-sm">Book again</a>
+            {% else %}
+              <button class="btn btn-light btn-sm">View details</button>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h4>No bookings yet</h4>
+        <p>Start your journey by booking a bus ticket!</p>
+        <a href="{% url 'bus_listing' %}" class="btn btn-primary btn-sm">Browse buses</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
