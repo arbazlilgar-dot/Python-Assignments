@@ -1,0 +1,68 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 400px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/about_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">My Wishlist</div>
+    </div>
+</div>
+
+<!-- Wishlist -->
+<div class="offers">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h2 class="section_title">Your Favorite Cars</h2>
+            </div>
+        </div>
+        
+        <div class="row offers_items mt-5">
+            {% if wishlist_items %}
+                {% for item in wishlist_items %}
+                <!-- Wishlist Item -->
+                <div class="col-lg-6 offers_col mb-4">
+                    <div class="offers_item rating_4">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="offers_image_container">
+                                    <div class="offers_image_background" style="background-image:url({% if item.car.car_image %}{{ item.car.car_image.url }}{% else %}{% static 'images/offer_1.jpg' %}{% endif %})"></div>
+                                    <div class="offer_name"><a href="{% url 'car_details' item.car.pk %}">{{ item.car.brand }}</a></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="offers_content">
+                                    <div class="offers_price">₹{{ item.car.price_per_day }}<span>per day</span></div>
+                                    <div class="rating_r rating_r_4 offers_rating" data-rating="4">
+                                        <i></i><i></i><i></i><i></i><i></i>
+                                    </div>
+                                    <p class="offers_text">{{ item.car.car_name }} ({{ item.car.model_year }})</p>
+                                    <div class="offers_icons" style="margin-top: 15px;">
+                                        <ul class="offers_icons_list" style="display: flex; gap: 20px; padding: 0; list-style: none; margin-bottom: 20px;">
+                                            <li class="offers_icons_item" title="Seats" style="font-size: 14px; color: #717171;"><i class="fa fa-users" style="color: #fa9e1b; margin-right: 5px;"></i> {{ item.car.seats }}</li>
+                                            <li class="offers_icons_item" title="Transmission" style="font-size: 14px; color: #717171;"><i class="fa fa-cogs" style="color: #fa9e1b; margin-right: 5px;"></i> {{ item.car.transmission }}</li>
+                                        </ul>
+                                    </div>
+                                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                        <div class="button book_button" style="margin: 0;"><a href="{% url 'car_details' item.car.pk %}">View Details<span></span><span></span><span></span></a></div>
+                                        <a href="{% url 'remove_from_wishlist' item.pk %}" class="btn" style="background: #dc3545; color: white; border-radius: 35px; line-height: 48px; padding: 0 25px; font-weight: 700; text-transform: uppercase;" onclick="return confirm('Remove this car from your wishlist?');"><i class="fa fa-trash"></i> Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p style="font-size: 20px; color: #999;">Your wishlist is empty. Explore our cars and add your favorites!</p>
+                    <div class="button book_button" style="margin-top: 20px;"><a href="{% url 'car_rentals' %}">Browse Cars<span></span><span></span><span></span></a></div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

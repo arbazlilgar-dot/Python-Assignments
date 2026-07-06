@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Website Admin Dashboard - Doctor Finder{% endblock %}
+
+{% block content %}
+<div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="margin:0;">Dashboard Overview</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Welcome to the custom Website Admin Panel.</p>
+    </div>
+    <a href="{% url 'website_admin_logout' %}" class="btn-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="glass stat-card">
+        <h3><i class="fa-solid fa-user-doctor"></i></h3>
+        <h2 style="font-size: 2rem;">{{ doctors_count }}</h2>
+        <p style="color: var(--text-muted);">Total Doctors</p>
+    </div>
+    <div class="glass stat-card">
+        <h3><i class="fa-solid fa-users"></i></h3>
+        <h2 style="font-size: 2rem;">{{ patients_count }}</h2>
+        <p style="color: var(--text-muted);">Total Patients</p>
+    </div>
+    <div class="glass stat-card">
+        <h3><i class="fa-solid fa-calendar-check"></i></h3>
+        <h2 style="font-size: 2rem;">{{ appointments_count }}</h2>
+        <p style="color: var(--text-muted);">Appointments</p>
+    </div>
+    <div class="glass stat-card">
+        <h3><i class="fa-solid fa-indian-rupee-sign"></i></h3>
+        <h2 style="font-size: 2rem;">{{ revenue }}</h2>
+        <p style="color: var(--text-muted);">Total Revenue</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+    <!-- Recent Appointments -->
+    <div class="glass" style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 1rem; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem;">Recent Appointments (Paginated)</h3>
+        <div style="overflow-x: auto;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in page_obj %}
+                    <tr>
+                        <td>#{{ appt.id }}</td>
+                        <td>{{ appt.patient.name }}</td>
+                        <td>Dr. {{ appt.doctor.name }}</td>
+                        <td>{{ appt.date }} at {{ appt.time }}</td>
+                        <td>
+                            {% if appt.status == 'Confirmed' %}
+                                <span class="badge badge-avail">Confirmed</span>
+                            {% else %}
+                                <span class="badge badge-rating">Pending</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted);">No appointments found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination controls -->
+        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem;">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="btn-outline">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn-outline">Previous</a>
+            {% endif %}
+
+            <span style="align-self: center;">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn-outline">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn-outline">Last &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

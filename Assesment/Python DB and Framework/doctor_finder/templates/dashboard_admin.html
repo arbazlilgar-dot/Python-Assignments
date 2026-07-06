@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+    <h2>Admin Dashboard</h2>
+    <button onclick="openAddDoctorModal()" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Doctor</button>
+</div>
+
+<div class="glass" style="padding: 2rem; margin-top: 2rem;">
+    <h3>All Doctors</h3>
+    <table style="width: 100%; margin-top: 1rem; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                <th style="padding: 1rem;">Name</th>
+                <th style="padding: 1rem;">Specialization</th>
+                <th style="padding: 1rem;">Fee</th>
+                <th style="padding: 1rem;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in doctors %}
+            <tr id="doc-row-{{ doc.id }}" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <td style="padding: 1rem;">Dr. {{ doc.name }}</td>
+                <td style="padding: 1rem;">{{ doc.specialization }}</td>
+                <td style="padding: 1rem;"><i class="fa-solid fa-indian-rupee-sign"></i> {{ doc.consultation_fee }}</td>
+                <td style="padding: 1rem;">
+                    <a href="{% url 'admin:doctor_doctor_change' doc.id %}" target="_blank" class="btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;"><i class="fa-solid fa-pen"></i> Edit</a>
+                    <button onclick="deleteDoctor({{ doc.id }})" class="btn-primary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; background: #ef4444; border: none;"><i class="fa-solid fa-trash"></i> Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- AJAX Add Doctor Modal -->
+<div id="doctorModal" class="modal-overlay">
+    <div class="modal-content glass">
+        <h3 style="margin-bottom: 1.5rem;">Add New Doctor</h3>
+        <form id="ajaxDoctorForm" onsubmit="submitAjaxDoctorForm(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <input type="text" name="name" placeholder="Name" class="form-control" required>
+                <input type="text" name="specialization" placeholder="Specialization" class="form-control" required>
+                <input type="text" name="qualification" placeholder="Qualification" class="form-control" required>
+                <input type="number" name="experience" placeholder="Experience (Yrs)" class="form-control" required>
+                <input type="text" name="hospital" placeholder="Hospital" class="form-control" required>
+                <input type="text" name="clinic_address" placeholder="Clinic Address" class="form-control" required>
+                <input type="text" name="phone" placeholder="Phone" class="form-control" required>
+                <input type="email" name="email" placeholder="Email" class="form-control" required>
+                <input type="text" name="available_days" placeholder="Available Days" class="form-control" required>
+                <input type="text" name="available_time" placeholder="Available Time" class="form-control" required>
+                <input type="number" name="consultation_fee" placeholder="Fee" class="form-control" required>
+                <input type="text" name="location" placeholder="City/Location" class="form-control" required>
+            </div>
+            <textarea name="description" placeholder="Description" class="form-control" style="margin-top: 1rem;" rows="3"></textarea>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <button type="button" onclick="closeDoctorModal()" class="btn-outline">Cancel</button>
+                <button type="submit" class="btn-primary">Add Doctor</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 400px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/single_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">Success</div>
+    </div>
+</div>
+
+<div class="contact_form_section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="contact_form_container text-center" style="background: white; padding: 60px 40px; border-radius: 10px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1);">
+                    <i class="fa fa-check-circle text-success" style="font-size: 80px; margin-bottom: 20px;"></i>
+                    <h2 style="color: #2d2c2c; font-weight: 700;">Payment Successful!</h2>
+                    <p style="font-size: 18px; margin-top: 20px;">Your booking <strong>{{ booking.booking_id }}</strong> for {{ booking.car.brand }} {{ booking.car.car_name }} has been confirmed.</p>
+                    <p>Total Paid: ₹{{ booking.total_amount }}</p>
+                    
+                    <a href="{% url 'my_orders' %}" class="button trans_200 mt-4" style="display: inline-block; padding: 15px 40px; background: #fa9e1b; color: white; border-radius: 8px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">View My Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

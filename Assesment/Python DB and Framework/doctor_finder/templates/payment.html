@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container glass" style="text-align: center;">
+    <h2>Payment Gateway (Dummy Paytm)</h2>
+    <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border: 1px solid #00baf2;">
+        <h3 style="color: #00baf2; margin-bottom: 1rem;"><i class="fa-solid fa-wallet"></i> Paytm</h3>
+        <p style="margin-bottom: 0.5rem;"><strong>Appointment ID:</strong> {{ appointment.id }}</p>
+        <p style="margin-bottom: 0.5rem;"><strong>Doctor:</strong> Dr. {{ appointment.doctor.name }}</p>
+        <p style="font-size: 1.5rem; font-weight: 700; margin-top: 1rem;">Amount: <i class="fa-solid fa-indian-rupee-sign"></i> {{ appointment.doctor.consultation_fee }}</p>
+    </div>
+    
+    <form action="{% url 'process_payment' appointment.id %}" method="POST">
+        {% csrf_token %}
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">This is a simulated payment flow as requested. Clicking pay will generate a dummy transaction.</p>
+        <button type="submit" class="btn-primary" style="width: 100%; background: #00baf2; font-size: 1.2rem;">Pay Now</button>
+    </form>
+</div>
+{% endblock %}

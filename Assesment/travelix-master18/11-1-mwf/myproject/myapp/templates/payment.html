@@ -1,0 +1,173 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 400px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/single_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">Payment</div>
+    </div>
+</div>
+
+<!-- Payment Section -->
+<div class="contact_form_section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="contact_form_container" style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1);">
+                    <div class="contact_title text-center mb-5">Complete Your Booking</div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 style="color: #2d2c2c; font-weight: 700;">Car Details:</h5>
+                            <p style="font-size: 18px;">{{ car.brand }} {{ car.car_name }}</p>
+                            <img src="{% if car.car_image %}{{ car.car_image.url }}{% else %}{% static 'images/offer_1.jpg' %}{% endif %}" alt="Car" style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                        </div>
+                        <div class="col-md-6">
+                            <h5 style="color: #2d2c2c; font-weight: 700;">Booking Summary:</h5>
+                            <table class="table mt-3">
+                                <tr>
+                                    <th>Pickup:</th>
+                                    <td>{{ pickup_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Return:</th>
+                                    <td>{{ return_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rental Days:</th>
+                                    <td>{{ rental_days }} Days</td>
+                                </tr>
+                                <tr>
+                                    <th>Price Per Day:</th>
+                                    <td>₹{{ car.price_per_day }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size: 20px; color: #fa9e1b;">Grand Total:</th>
+                                    <td style="font-size: 20px; font-weight: 700;">₹{{ total_amount }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h4 class="mt-4 mb-4 text-center" style="color: #2d2c2c; font-weight: 700;">Select Payment Method</h4>
+                    <form action="{% url 'process_payment' %}" method="post" id="paymentForm">
+                        {% csrf_token %}
+                        <div class="row justify-content-center mb-4">
+                            <div class="col-md-3">
+                                <label style="display: block; padding: 20px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.3s; text-align: center;" onclick="showPaymentFields('card')">
+                                    <input type="radio" name="payment_method" value="Card" required style="margin-bottom: 10px;">
+                                    <br><i class="fa fa-credit-card" style="font-size: 30px; color: #fa9e1b;"></i><br> Card
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="display: block; padding: 20px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.3s; text-align: center;" onclick="showPaymentFields('upi')">
+                                    <input type="radio" name="payment_method" value="UPI" required style="margin-bottom: 10px;">
+                                    <br><i class="fa fa-mobile" style="font-size: 30px; color: #fa9e1b;"></i><br> UPI
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="display: block; padding: 20px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.3s; text-align: center;" onclick="showPaymentFields('netbanking')">
+                                    <input type="radio" name="payment_method" value="Net Banking" required style="margin-bottom: 10px;">
+                                    <br><i class="fa fa-university" style="font-size: 30px; color: #fa9e1b;"></i><br> Net Banking
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="display: block; padding: 20px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.3s; text-align: center;" onclick="showPaymentFields('wallet')">
+                                    <input type="radio" name="payment_method" value="Wallet" required style="margin-bottom: 10px;">
+                                    <br><i class="fa fa-wallet" style="font-size: 30px; color: #fa9e1b;"></i><br> Wallet
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Fields -->
+                        <div id="cardFields" style="display:none; max-width: 400px; margin: 0 auto;">
+                            <input type="text" class="form-control mb-3" placeholder="Card Number (e.g. 4111 1111 1111 1111)" pattern="\d{16}" title="16 Digit Card Number">
+                            <div class="row">
+                                <div class="col-6"><input type="text" class="form-control mb-3" placeholder="MM/YY"></div>
+                                <div class="col-6"><input type="text" class="form-control mb-3" placeholder="CVV" pattern="\d{3}"></div>
+                            </div>
+                            <input type="text" class="form-control mb-3" placeholder="Card Holder Name">
+                        </div>
+
+                        <div id="upiFields" style="display:none; max-width: 400px; margin: 0 auto;">
+                            <input type="text" class="form-control mb-3" placeholder="UPI ID (e.g. demo@upi)">
+                        </div>
+
+                        <div id="netbankingFields" style="display:none; max-width: 400px; margin: 0 auto;">
+                            <select class="form-control mb-3">
+                                <option>State Bank of India</option>
+                                <option>HDFC Bank</option>
+                                <option>ICICI Bank</option>
+                                <option>Axis Bank</option>
+                            </select>
+                        </div>
+
+                        <div id="walletFields" style="display:none; max-width: 400px; margin: 0 auto;">
+                            <select class="form-control mb-3">
+                                <option>Paytm</option>
+                                <option>PhonePe</option>
+                                <option>Amazon Pay</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" id="payBtn" class="button trans_200 mt-4" style="width: 50%; background: #2d2c2c; color: white; border: none; border-radius: 8px; font-weight: 700; height: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Pay Now</button>
+                        </div>
+                    </form>
+
+                    <!-- Processing Animation overlay -->
+                    <div id="processingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center;">
+                        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <h3 class="mt-3" style="color: #2d2c2c; font-weight: 700;">Processing Payment...</h3>
+                        <p>Please do not refresh or close this page.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showPaymentFields(method) {
+        document.getElementById('cardFields').style.display = 'none';
+        document.getElementById('upiFields').style.display = 'none';
+        document.getElementById('netbankingFields').style.display = 'none';
+        document.getElementById('walletFields').style.display = 'none';
+
+        if (method === 'card') {
+            document.getElementById('cardFields').style.display = 'block';
+            document.getElementById('cardFields').querySelectorAll('input').forEach(i => i.required = true);
+            document.getElementById('upiFields').querySelectorAll('input').forEach(i => i.required = false);
+        } else if (method === 'upi') {
+            document.getElementById('upiFields').style.display = 'block';
+            document.getElementById('upiFields').querySelectorAll('input').forEach(i => i.required = true);
+            document.getElementById('cardFields').querySelectorAll('input').forEach(i => i.required = false);
+        } else if (method === 'netbanking') {
+            document.getElementById('netbankingFields').style.display = 'block';
+            document.querySelectorAll('#cardFields input, #upiFields input').forEach(i => i.required = false);
+        } else if (method === 'wallet') {
+            document.getElementById('walletFields').style.display = 'block';
+            document.querySelectorAll('#cardFields input, #upiFields input').forEach(i => i.required = false);
+        }
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // stop normal submission
+        // Show loading animation
+        document.getElementById('processingOverlay').style.display = 'flex';
+        
+        // Wait 2.5 seconds, then submit
+        setTimeout(() => {
+            this.submit();
+        }, 2500);
+    });
+</script>
+
+{% endblock %}

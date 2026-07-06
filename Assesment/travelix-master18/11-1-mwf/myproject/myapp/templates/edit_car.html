@@ -1,0 +1,133 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 300px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/about_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">Edit Car</div>
+    </div>
+</div>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="contact_info" style="background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1);">
+                <div class="contact_title text-center mb-4">Update Car Details</div>
+                
+                <form action="{% url 'edit_car' car.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Brand</label>
+                            <input type="text" name="brand" class="form-control" value="{{ car.brand }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Car Name</label>
+                            <input type="text" name="car_name" class="form-control" value="{{ car.car_name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Model Year</label>
+                            <input type="number" name="model_year" class="form-control" value="{{ car.model_year }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Plate Number</label>
+                            <!-- Plate number is readonly -->
+                            <input type="text" class="form-control" value="{{ car.plate_number }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Price Per Hour (₹)</label>
+                            <input type="number" name="price_per_hour" class="form-control" value="{{ car.price_per_hour }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Price Per Day (₹)</label>
+                            <input type="number" name="price_per_day" class="form-control" value="{{ car.price_per_day }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Seats</label>
+                            <select name="seats" class="form-control" required>
+                                <option value="4" {% if car.seats == 4 %}selected{% endif %}>4</option>
+                                <option value="5" {% if car.seats == 5 %}selected{% endif %}>5</option>
+                                <option value="7" {% if car.seats == 7 %}selected{% endif %}>7</option>
+                                <option value="9" {% if car.seats == 9 %}selected{% endif %}>9</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="font-weight-bold">Fuel Type</label>
+                            <select name="fuel_type" class="form-control" required>
+                                <option value="Petrol" {% if car.fuel_type == 'Petrol' %}selected{% endif %}>Petrol</option>
+                                <option value="Diesel" {% if car.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                                <option value="CNG" {% if car.fuel_type == 'CNG' %}selected{% endif %}>CNG</option>
+                                <option value="Electric" {% if car.fuel_type == 'Electric' %}selected{% endif %}>Electric</option>
+                                <option value="Hybrid" {% if car.fuel_type == 'Hybrid' %}selected{% endif %}>Hybrid</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="font-weight-bold">Transmission</label>
+                            <select name="transmission" class="form-control" required>
+                                <option value="Manual" {% if car.transmission == 'Manual' %}selected{% endif %}>Manual</option>
+                                <option value="Automatic" {% if car.transmission == 'Automatic' %}selected{% endif %}>Automatic</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="font-weight-bold">Airbags Count</label>
+                            <input type="number" name="airbags_count" class="form-control" value="{{ car.airbags_count }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="font-weight-bold">Tyre Condition</label>
+                            <input type="text" name="tyre_condition" class="form-control" value="{{ car.tyre_condition }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 mt-3">
+                        <label class="font-weight-bold d-block mb-3">Features</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label><input type="checkbox" name="has_ac" {% if car.has_ac %}checked{% endif %}> Air Conditioning</label><br>
+                                <label><input type="checkbox" name="has_airbags" {% if car.has_airbags %}checked{% endif %}> Airbags</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label><input type="checkbox" name="has_abs" {% if car.has_abs %}checked{% endif %}> ABS</label><br>
+                                <label><input type="checkbox" name="has_gps" {% if car.has_gps %}checked{% endif %}> GPS</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label><input type="checkbox" name="has_music_system" {% if car.has_music_system %}checked{% endif %}> Music System</label><br>
+                                <label><input type="checkbox" name="has_reverse_camera" {% if car.has_reverse_camera %}checked{% endif %}> Reverse Camera</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="font-weight-bold">Car Image</label>
+                        {% if car.car_image %}
+                            <div class="mb-2">
+                                <img src="{{ car.car_image.url }}" alt="Current Image" style="height: 100px; border-radius: 5px;">
+                            </div>
+                        {% endif %}
+                        <input type="file" name="car_image" class="form-control-file">
+                        <small class="text-muted">Leave empty to keep the current image.</small>
+                    </div>
+
+                    <button type="submit" class="button trans_200" style="width: 100%; border:none; margin-top:20px;">Save Changes</button>
+                    <a href="{% url 'car_rentals' %}" class="btn btn-secondary mt-3" style="width: 100%; border-radius: 30px; height: 50px; line-height: 36px;">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

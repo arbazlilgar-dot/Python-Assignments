@@ -1,0 +1,77 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 400px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/single_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">Booking Details</div>
+    </div>
+</div>
+
+<div class="contact_form_section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card mb-4" style="border: none; border-radius: 10px; box-shadow: 0px 5px 20px rgba(0,0,0,0.1);">
+                    <div class="card-header" style="background: #2d2c2c; color: white; border-radius: 10px 10px 0 0;">
+                        <h4 class="mb-0">Booking ID: {{ booking.booking_id }} 
+                            <span class="float-right badge badge-light text-dark">{{ booking.status }}</span>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Car Information -->
+                            <div class="col-md-6 mb-4">
+                                <h5 style="color: #fa9e1b; font-weight: 700; border-bottom: 2px solid #eee; padding-bottom: 10px;">Car Information</h5>
+                                <div class="text-center mb-3">
+                                    <img src="{% if booking.car.car_image %}{{ booking.car.car_image.url }}{% else %}{% static 'images/offer_1.jpg' %}{% endif %}" alt="Car" style="max-height: 200px; border-radius: 8px;">
+                                </div>
+                                <table class="table table-borderless table-sm">
+                                    <tr><th>Car:</th><td>{{ booking.car.brand }} {{ booking.car.car_name }}</td></tr>
+                                    <tr><th>Plate Number:</th><td>{{ booking.car.plate_number }}</td></tr>
+                                    <tr><th>Fuel Type:</th><td>{{ booking.car.fuel_type }}</td></tr>
+                                    <tr><th>Transmission:</th><td>{{ booking.car.transmission }}</td></tr>
+                                    <tr><th>Seats:</th><td>{{ booking.car.seats }}</td></tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Booking Information -->
+                            <div class="col-md-6 mb-4">
+                                <h5 style="color: #fa9e1b; font-weight: 700; border-bottom: 2px solid #eee; padding-bottom: 10px;">Booking Information</h5>
+                                <table class="table table-borderless table-sm">
+                                    <tr><th>Pickup:</th><td>{{ booking.pickup_time }}</td></tr>
+                                    <tr><th>Return:</th><td>{{ booking.return_time }}</td></tr>
+                                    <tr><th>Rental Days:</th><td>{{ booking.rental_days }} Days</td></tr>
+                                    <tr><th>Booking Date:</th><td>{{ booking.booking_date|date:"F j, Y, g:i a" }}</td></tr>
+                                </table>
+
+                                <h5 style="color: #fa9e1b; font-weight: 700; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px;">Payment Information</h5>
+                                {% if payment %}
+                                <table class="table table-borderless table-sm">
+                                    <tr><th>Payment ID:</th><td>{{ payment.payment_id }}</td></tr>
+                                    <tr><th>Transaction ID:</th><td>{{ payment.transaction_id }}</td></tr>
+                                    <tr><th>Method:</th><td>{{ payment.payment_method }}</td></tr>
+                                    <tr><th>Status:</th><td>{{ payment.status }}</td></tr>
+                                    <tr><th>Paid On:</th><td>{{ payment.paid_at|date:"F j, Y, g:i a" }}</td></tr>
+                                    <tr><th style="font-size: 18px;">Total Paid:</th><td style="font-size: 18px; font-weight: 700; color: #28a745;">₹{{ payment.amount }}</td></tr>
+                                </table>
+                                {% else %}
+                                <p class="text-muted">Payment details not available.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="{% url 'my_orders' %}" class="btn btn-dark" style="border-radius: 20px; padding: 10px 30px;">Back to Orders</a>
+                            <a href="{% url 'download_invoice' booking.pk %}" class="btn btn-info" style="border-radius: 20px; padding: 10px 30px;">Download Invoice</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

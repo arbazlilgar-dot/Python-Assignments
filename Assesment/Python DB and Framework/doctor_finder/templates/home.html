@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Find Your Perfect Doctor <br>Book Instantly.</h1>
+        <p>Premium healthcare at your fingertips. Discover top-rated specialists, book appointments without the hassle, and get the care you deserve with our modern platform.</p>
+        <a href="{% url 'doctor_list' %}" class="btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">Search Doctors</a>
+        
+        <div class="stats" style="display: flex; gap: 2rem; margin-top: 3rem;">
+            <div><h2 style="color: var(--primary);">500+</h2><p class="text-muted">Doctors</p></div>
+            <div><h2 style="color: var(--primary);">50k+</h2><p class="text-muted">Patients</p></div>
+            <div><h2 style="color: var(--primary);">4.9/5</h2><p class="text-muted">Rating</p></div>
+        </div>
+    </div>
+    <div class="hero-img">
+        <div class="glass" style="padding: 2rem; border-radius: 30px;">
+            <i class="fa-solid fa-user-doctor" style="font-size: 15rem; color: var(--primary); opacity: 0.8;"></i>
+        </div>
+    </div>
+</section>
+
+<section style="margin-top: 5rem;">
+    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Featured Doctors</h2>
+    <div class="doctor-grid">
+        {% for doc in featured_doctors %}
+        <div class="doctor-card glass">
+            <div class="doctor-img-placeholder">
+                {% if doc.profile_image %}
+                    <img src="{{ doc.profile_image.url }}" alt="{{ doc.name }}" style="width:100%; height:100%; object-fit:cover; border-radius: 12px;">
+                {% else %}
+                    <i class="fa-solid fa-user-md"></i>
+                {% endif %}
+            </div>
+            <h3>Dr. {{ doc.name }}</h3>
+            <p style="color: var(--primary); font-weight: 500;">{{ doc.specialization }}</p>
+            <p><i class="fa-solid fa-location-dot"></i> {{ doc.location }}</p>
+            <p><i class="fa-solid fa-star" style="color: gold;"></i> {{ doc.experience }} Years Exp.</p>
+            <a href="{% url 'doctor_detail' doc.id %}" class="btn-outline" style="text-align: center; margin-top: auto;">View Profile</a>
+        </div>
+        {% empty %}
+        <p style="grid-column: 1 / -1; text-align: center;">No doctors listed yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

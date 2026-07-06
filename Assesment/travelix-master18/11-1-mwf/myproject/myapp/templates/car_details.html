@@ -1,0 +1,140 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Home -->
+<div class="home" style="height: 400px;">
+    <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/single_background.jpg' %}"></div>
+    <div class="home_content">
+        <div class="home_title">{{ car.car_name }}</div>
+    </div>
+</div>
+
+<!-- Car Details Section -->
+<div class="contact_form_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Car Info -->
+                <div class="contact_form_container" style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1);">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            {% if car.car_image %}
+                                <img src="{{ car.car_image.url }}" alt="{{ car.car_name }}" style="width: 100%; height: auto; border-radius: 10px; max-height: 400px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'images/offer_1.jpg' %}" alt="Placeholder" style="width: 100%; border-radius: 10px;">
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="contact_title">{{ car.brand }} {{ car.car_name }} <span style="font-size: 20px; color: #fa9e1b; float: right;">₹{{ car.price_per_day }} / Day</span></div>
+                    <p class="mt-2 text-muted">Model Year: {{ car.model_year }} &nbsp;|&nbsp; Plate: {{ car.plate_number }}</p>
+                    
+                    <h4 class="mt-5 mb-4" style="color: #2d2c2c; font-weight: 700; border-bottom: 2px solid #fa9e1b; padding-bottom: 10px; display: inline-block;">Specifications</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="border: 1px solid #eee; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                            <tbody>
+                                <tr><th style="background-color: #f8f9fa; width: 40%;"><i class="fa fa-users text-warning mr-2"></i> Seats</th><td>{{ car.seats }}</td></tr>
+                                <tr><th style="background-color: #f8f9fa;"><i class="fa fa-tint text-warning mr-2"></i> Fuel Type</th><td>{{ car.fuel_type }}</td></tr>
+                                <tr><th style="background-color: #f8f9fa;"><i class="fa fa-cogs text-warning mr-2"></i> Transmission</th><td>{{ car.transmission }}</td></tr>
+                                <tr><th style="background-color: #f8f9fa;"><i class="fa fa-life-ring text-warning mr-2"></i> Tyre Condition</th><td>{{ car.tyre_condition }}</td></tr>
+                                <tr><th style="background-color: #f8f9fa;"><i class="fa fa-shield text-warning mr-2"></i> Airbags Count</th><td>{{ car.airbags_count }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="mt-5 mb-4" style="color: #2d2c2c; font-weight: 700; border-bottom: 2px solid #fa9e1b; padding-bottom: 10px; display: inline-block;">Features</h4>
+                    <div class="row" style="background: #f8f9fa; padding: 25px 15px; border-radius: 8px; margin: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <div class="col-md-4">
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_ac %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> Air Conditioning</li>
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_airbags %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> Airbags</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_abs %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> ABS</li>
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_gps %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> GPS</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_music_system %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> Music System</li>
+                                <li style="margin-bottom: 15px; font-weight: 500;"><i class="fa {% if car.has_reverse_camera %}fa-check text-success{% else %}fa-times text-danger{% endif %}" style="margin-right: 10px; font-size: 16px;"></i> Reverse Camera</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Booking Form -->
+                <div class="contact_info" style="background: linear-gradient(135deg, #fa9e1b 0%, #ff6a00 100%); padding: 40px; border-radius: 15px; box-shadow: 0px 15px 35px rgba(250, 158, 27, 0.3); color: white;">
+                    <div class="contact_title text-center" style="color: white; font-weight: 700; margin-bottom: 30px;">Book This Car</div>
+                    <form action="{% url 'payment' car.pk %}" method="post" class="contact_form text-center">
+                        {% csrf_token %}
+                        <input type="text" name="full_name" class="contact_form_name input_field mb-3" placeholder="Full Name" style="width: 100%; height: 50px; border: none; border-radius: 8px; padding: 0 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" required>
+                        <input type="email" name="email" class="contact_form_name input_field mb-3" placeholder="Email" style="width: 100%; height: 50px; border: none; border-radius: 8px; padding: 0 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" required>
+                        <input type="tel" name="mobile" class="contact_form_name input_field mb-3" placeholder="Mobile Number" style="width: 100%; height: 50px; border: none; border-radius: 8px; padding: 0 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" required>
+                        
+                        <div class="mt-3 text-left" style="font-weight: 600; margin-bottom: 5px;"><label>Pickup Date & Time:</label></div>
+                        <input type="datetime-local" name="pickup_time" id="pickup_time" class="contact_form_name input_field mb-3" style="width: 100%; height: 50px; border: none; border-radius: 8px; padding: 0 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" required>
+                        
+                        <div class="mt-3 text-left" style="font-weight: 600; margin-bottom: 5px;"><label>Return Date & Time:</label></div>
+                        <input type="datetime-local" name="return_time" id="return_time" class="contact_form_name input_field" style="width: 100%; height: 50px; border: none; border-radius: 8px; padding: 0 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" required>
+
+                        <input type="hidden" name="amount" id="form_amount" value="0">
+
+                        <div id="price_display" class="mt-3 text-left" style="font-weight: 700; font-size: 18px; display: none; color: #fff;">
+                            Total Price: ₹<span id="total_price">0</span>
+                        </div>
+
+                        <button type="submit" class="form_submit_button button trans_200 mt-4" style="width: 100%; background: #2d2c2c; color: white; border: none; border-radius: 8px; font-weight: 700; height: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Book Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pickupInput = document.getElementById('pickup_time');
+    const returnInput = document.getElementById('return_time');
+    const priceDisplay = document.getElementById('price_display');
+    const totalPriceSpan = document.getElementById('total_price');
+    const formAmount = document.getElementById('form_amount');
+    
+    // Use price_per_day as requested
+    const pricePerDay = {{ car.price_per_day }};
+    
+    function calculatePrice() {
+        if (pickupInput.value && returnInput.value) {
+            const pickup = new Date(pickupInput.value);
+            const returnDate = new Date(returnInput.value);
+            
+            const diffTime = returnDate - pickup;
+            if (diffTime > 0) {
+                // Calculate difference in days (ceiling)
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const totalCost = diffDays * pricePerDay;
+                
+                totalPriceSpan.textContent = totalCost;
+                formAmount.value = totalCost;
+                priceDisplay.style.display = 'block';
+            } else {
+                priceDisplay.style.display = 'none';
+                formAmount.value = 0;
+            }
+        } else {
+            priceDisplay.style.display = 'none';
+            formAmount.value = 0;
+        }
+    }
+    
+    pickupInput.addEventListener('change', calculatePrice);
+    returnInput.addEventListener('change', calculatePrice);
+});
+</script>

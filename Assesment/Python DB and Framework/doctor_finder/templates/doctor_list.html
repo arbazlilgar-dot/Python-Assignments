@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Doctors - Doctor Finder{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a> / Doctors
+</div>
+
+<h1 style="margin-bottom: 2rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Find Your Specialist</h1>
+
+<div class="search-filter-section">
+    <!-- Sidebar Filter -->
+    <aside class="sidebar-filter glass">
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary);"><i class="fa-solid fa-filter"></i> Filters</h3>
+        <form method="GET" action="{% url 'doctor_list' %}">
+            <div class="form-group">
+                <label>Search Name or Specialty</label>
+                <input type="text" name="q" class="form-control" placeholder="e.g. Cardiologist..." value="{{ request.GET.q }}">
+            </div>
+            
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" name="city" class="form-control" placeholder="e.g. Mumbai..." value="{{ request.GET.city }}">
+            </div>
+            
+            <div class="form-group">
+                <label>Hospital</label>
+                <input type="text" name="hospital" class="form-control" placeholder="e.g. Apollo..." value="{{ request.GET.hospital }}">
+            </div>
+            
+            <div class="form-group">
+                <label>Max Fee (₹)</label>
+                <input type="number" name="fee_max" class="form-control" placeholder="e.g. 1000" value="{{ request.GET.fee_max }}">
+            </div>
+            
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;"><i class="fa-solid fa-search"></i> Search</button>
+        </form>
+    </aside>
+
+    <!-- Results List -->
+    <div class="doctor-results">
+        {% if doctors %}
+            {% for doctor in doctors %}
+            <div class="doc-list-card glass">
+                <div class="doc-img-wrapper">
+                    {% if doctor.profile_image %}
+                        <img src="{{ doctor.profile_image.url }}" alt="{{ doctor.name }}">
+                    {% else %}
+                        <div class="doctor-img-placeholder"><i class="fa-solid fa-user-doctor"></i></div>
+                    {% endif %}
+                </div>
+                
+                <div class="doc-list-info">
+                    <div>
+                        <div class="doc-header">
+                            <div class="doc-title">
+                                <h3>Dr. {{ doctor.name }}</h3>
+                                <span class="doc-spec">{{ doctor.specialization }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="badge-group">
+                            <span class="badge badge-rating"><i class="fa-solid fa-star"></i> {{ doctor.rating }}</span>
+                            <span class="badge badge-exp"><i class="fa-solid fa-stethoscope"></i> {{ doctor.experience }} Years Exp</span>
+                            <span class="badge badge-avail"><i class="fa-solid fa-calendar-check"></i> Available</span>
+                        </div>
+                        
+                        <div class="doc-meta">
+                            <div><i class="fa-solid fa-hospital"></i> {{ doctor.hospital }}</div>
+                            <div><i class="fa-solid fa-location-dot"></i> {{ doctor.city }}</div>
+                            <div><i class="fa-solid fa-indian-rupee-sign"></i> {{ doctor.consultation_fee }}</div>
+                            <div><i class="fa-solid fa-language"></i> {{ doctor.languages_spoken }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="doc-actions">
+                        <a href="{% url 'doctor_detail' doctor.id %}" class="btn-outline"><i class="fa-solid fa-user-md"></i> View Profile</a>
+                        <a href="{% url 'book_appointment' doctor.id %}" class="btn-primary"><i class="fa-regular fa-calendar-plus"></i> Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="glass" style="padding: 3rem; text-align: center;">
+                <h3 style="color: var(--text-muted);"><i class="fa-solid fa-xmark-circle fa-3x" style="display:block; margin-bottom: 1rem; color: #cbd5e1;"></i> No doctors found matching your criteria.</h3>
+                <a href="{% url 'doctor_list' %}" class="btn-primary" style="margin-top: 1rem;">Clear Filters</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

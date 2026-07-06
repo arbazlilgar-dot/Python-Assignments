@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Dr. {{ doctor.name }} - {{ doctor.specialization }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a> / <a href="{% url 'doctor_list' %}">Doctors</a> / Dr. {{ doctor.name }}
+</div>
+
+<div class="detail-grid">
+    <!-- Main Detail Section -->
+    <div class="detail-main">
+        <!-- Header Card -->
+        <div class="glass profile-header-card">
+            {% if doctor.profile_image %}
+                <img src="{{ doctor.profile_image.url }}" alt="{{ doctor.name }}">
+            {% else %}
+                <div class="doctor-img-placeholder" style="width: 200px; height: 200px; border-radius: 50%; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1);"><i class="fa-solid fa-user-doctor"></i></div>
+            {% endif %}
+            
+            <div class="profile-title">
+                <h1>Dr. {{ doctor.name }}</h1>
+                <p style="font-size: 1.25rem; color: var(--primary); font-weight: 600; margin-bottom: 1rem;">{{ doctor.specialization }}</p>
+                <div class="badge-group" style="margin-bottom: 1rem;">
+                    <span class="badge badge-rating"><i class="fa-solid fa-star"></i> {{ doctor.rating }}</span>
+                    <span class="badge badge-exp"><i class="fa-solid fa-stethoscope"></i> {{ doctor.experience }} Years Exp</span>
+                    <span class="badge badge-avail"><i class="fa-solid fa-calendar-check"></i> Available Today</span>
+                </div>
+                <p style="color: var(--text-muted);"><i class="fa-solid fa-language"></i> Speaks: {{ doctor.languages_spoken }}</p>
+            </div>
+        </div>
+
+        <!-- About Doctor -->
+        <div class="glass info-section">
+            <h3><i class="fa-solid fa-circle-info"></i> About Doctor</h3>
+            <p style="line-height: 1.8; color: var(--text-muted);">{{ doctor.description }}</p>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="glass info-section">
+            <h3><i class="fa-solid fa-user-graduate"></i> Professional Information</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; color: var(--text-muted);">
+                <div>
+                    <strong>Qualification</strong>
+                    <p>{{ doctor.qualification }}</p>
+                </div>
+                <div>
+                    <strong>Experience</strong>
+                    <p>{{ doctor.experience }} Years</p>
+                </div>
+                <div>
+                    <strong>Hospital Affiliation</strong>
+                    <p>{{ doctor.hospital }}</p>
+                </div>
+                <div>
+                    <strong>Awards & Achievements</strong>
+                    <p>{{ doctor.awards|default:"--"|linebreaksbr }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Timeline -->
+        <div class="glass info-section">
+            <h3><i class="fa-solid fa-timeline"></i> Education Timeline</h3>
+            <div style="margin-top: 1.5rem; color: var(--text-muted);">
+                {{ doctor.education_timeline|default:"Details not provided"|linebreaksbr }}
+            </div>
+        </div>
+        
+        <!-- Services Offered -->
+        <div class="glass info-section">
+            <h3><i class="fa-solid fa-hand-holding-medical"></i> Services Offered</h3>
+            <div style="margin-top: 1.5rem; color: var(--text-muted); padding-left: 1rem;">
+                <ul style="list-style-type: disc; margin-left: 1rem; line-height: 1.8;">
+                {% for service in doctor.services_offered.splitlines %}
+                    {% if service %}<li>{{ service }}</li>{% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Google Map -->
+        <div class="glass info-section">
+            <h3><i class="fa-solid fa-map-location-dot"></i> Clinic Location</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">{{ doctor.clinic_address }}, {{ doctor.city }}, {{ doctor.state }}</p>
+            <div style="border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <iframe 
+                    width="100%" 
+                    height="350" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    src="https://maps.google.com/maps?q={{ doctor.clinic_address|urlencode }},{{ doctor.city|urlencode }},{{ doctor.state|urlencode }}&t=&z=13&ie=UTF8&iwloc=&output=embed">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Sidebar -->
+    <div class="detail-sidebar">
+        <!-- Booking Card -->
+        <div class="glass booking-card">
+            <h3 style="color: var(--primary);">Consultation Fee</h3>
+            <div class="fee">₹{{ doctor.consultation_fee }} <span>/ visit</span></div>
+            
+            <div style="text-align: left; margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1);">
+                <p style="margin-bottom: 0.5rem; color: var(--text-muted);"><i class="fa-regular fa-calendar" style="color: var(--primary); width: 20px;"></i> <strong>Days:</strong> {{ doctor.available_days }}</p>
+                <p style="color: var(--text-muted);"><i class="fa-regular fa-clock" style="color: var(--primary); width: 20px;"></i> <strong>Timing:</strong> {{ doctor.available_time }}</p>
+            </div>
+            
+            <a href="{% url 'book_appointment' doctor.id %}" class="btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;"><i class="fa-solid fa-calendar-plus"></i> Book Appointment Now</a>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="glass" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1rem; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem;"><i class="fa-solid fa-address-book"></i> Clinic Contact</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-muted);">
+                <div>
+                    <i class="fa-solid fa-phone" style="color: var(--primary); width: 25px;"></i> {{ doctor.phone }}
+                </div>
+                <div>
+                    <i class="fa-solid fa-envelope" style="color: var(--primary); width: 25px;"></i> {{ doctor.email }}
+                </div>
+                <div>
+                    <i class="fa-solid fa-location-dot" style="color: var(--primary); width: 25px;"></i> {{ doctor.clinic_address }}, {{ doctor.city }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

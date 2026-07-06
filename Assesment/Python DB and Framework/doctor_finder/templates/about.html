@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="glass" style="padding: 3rem; text-align: center; margin-top: 2rem;">
+    <h2>About Doctor Finder</h2>
+    <p style="margin-top: 2rem; font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin-left: auto; margin-right: auto;">
+        Doctor Finder is a premium healthcare platform designed to bridge the gap between patients and top-tier medical professionals. Our mission is to make healthcare accessible, transparent, and hassle-free. With features like instant appointment booking, secure dummy payments for simulation, and comprehensive doctor profiles, we ensure you get the care you deserve.
+    </p>
+    
+    <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem; flex-wrap: wrap;">
+        <div class="glass" style="padding: 2rem; width: 250px;">
+            <i class="fa-solid fa-user-shield" style="font-size: 3rem; color: var(--primary);"></i>
+            <h3 style="margin-top: 1rem;">Verified Doctors</h3>
+        </div>
+        <div class="glass" style="padding: 2rem; width: 250px;">
+            <i class="fa-solid fa-clock" style="font-size: 3rem; color: var(--primary);"></i>
+            <h3 style="margin-top: 1rem;">24/7 Booking</h3>
+        </div>
+        <div class="glass" style="padding: 2rem; width: 250px;">
+            <i class="fa-solid fa-heart-pulse" style="font-size: 3rem; color: var(--primary);"></i>
+            <h3 style="margin-top: 1rem;">Premium Care</h3>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <style>
+        body { font-family: Helvetica, sans-serif; font-size: 14px; }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+        .logo { font-size: 30px; font-weight: bold; color: #fa9e1b; }
+        .invoice-details { text-align: right; }
+        table { width: 100%; line-height: inherit; text-align: left; border-collapse: collapse; margin-bottom: 30px; }
+        table td, table th { padding: 10px; border-bottom: 1px solid #eee; }
+        table th { background: #eee; font-weight: bold; }
+        .total-section { text-align: right; font-size: 16px; margin-top: 20px; }
+        .total-amount { font-size: 20px; font-weight: bold; color: #fa9e1b; }
+        .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <table style="width: 100%; border:none;">
+            <tr style="border:none;">
+                <td style="border:none; width: 50%;">
+                    <div class="logo">TRAVELIX</div><br>
+                    123 Travelix Street<br>
+                    Mumbai, Maharashtra 400001<br>
+                    contact@travelix.com
+                </td>
+                <td style="border:none; text-align: right; width: 50%;">
+                    <h2 style="margin: 0;">INVOICE</h2><br>
+                    <strong>Booking ID:</strong> {{ booking.booking_id }}<br>
+                    <strong>Transaction ID:</strong> {{ payment.transaction_id }}<br>
+                    <strong>Date:</strong> {{ payment.paid_at|date:"F j, Y" }}
+                </td>
+            </tr>
+        </table>
+        
+        <table style="width: 100%; border:none; margin-top: 30px;">
+            <tr style="border:none;">
+                <td style="border:none;">
+                    <strong>Billed To:</strong><br>
+                    {{ booking.user.name }}<br>
+                    {{ booking.user.email }}<br>
+                    {{ booking.user.mobile }}
+                </td>
+                <td style="border:none; text-align: right;">
+                    <strong>Payment Method:</strong><br>
+                    {{ payment.payment_method }}<br>
+                    <strong>Payment Status:</strong><br>
+                    {{ payment.status }}
+                </td>
+            </tr>
+        </table>
+        
+        <table style="margin-top: 30px;">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Pickup</th>
+                    <th>Return</th>
+                    <th style="text-align: center;">Rental Days</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ booking.car.brand }} {{ booking.car.car_name }} ({{ booking.car.plate_number }})</td>
+                    <td>{{ booking.pickup_time|date:"d M Y, H:i" }}</td>
+                    <td>{{ booking.return_time|date:"d M Y, H:i" }}</td>
+                    <td style="text-align: center;">{{ booking.rental_days }}</td>
+                    <td style="text-align: right;">₹{{ booking.total_amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table style="width: 40%; margin-left: 60%; border: none;">
+            <tr style="border:none;">
+                <td style="border:none; text-align: right; padding: 5px;">Subtotal:</td>
+                <td style="border:none; text-align: right; padding: 5px;">₹{{ subtotal }}</td>
+            </tr>
+            <tr style="border:none;">
+                <td style="border:none; text-align: right; padding: 5px;">GST (18%):</td>
+                <td style="border:none; text-align: right; padding: 5px;">₹{{ gst }}</td>
+            </tr>
+            <tr style="border:none;">
+                <td style="border:none; text-align: right; padding: 5px;"><strong>Total:</strong></td>
+                <td style="border:none; text-align: right; padding: 5px; color: #fa9e1b; font-size: 18px;"><strong>₹{{ booking.total_amount }}</strong></td>
+            </tr>
+        </table>
+        
+        <div class="footer">
+            Thank you for choosing Travelix Car Rentals!<br>
+            If you have any questions concerning this invoice, please contact our support team.
+        </div>
+    </div>
+</body>
+</html>
