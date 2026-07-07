@@ -1,0 +1,95 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Login | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 450px;
+        margin: 40px auto;
+        padding: 40px;
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+    }
+    .auth-subtitle {
+        color: var(--text-medium);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glass-card auth-container fade-in">
+    <div class="auth-header">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Login to access your dashboard and orders.</p>
+    </div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="loginBtn">
+            <span>Login</span>
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 25px;">
+        <p style="color: var(--text-medium); font-size: 0.95rem;">Don't have an account? <a href="/register/" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (isAuthenticated()) {
+            window.location.href = '/dashboard/';
+        }
+
+        const form = document.getElementById('loginForm');
+        const btn = document.getElementById('loginBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Show loading
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div>';
+            btn.disabled = true;
+
+            try {
+                const data = await apiFetch('/api-token-auth/', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (data.token) {
+                    setToken(data.token);
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = '/dashboard/', 1000);
+                }
+            } catch (error) {
+                showToast(error.message, 'error');
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        });
+    });
+</script>
+{% endblock %}

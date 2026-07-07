@@ -1,0 +1,116 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Register | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 40px;
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+    }
+    .auth-subtitle {
+        color: var(--text-medium);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glass-card auth-container fade-in">
+    <div class="auth-header">
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join us to start ordering premium food.</p>
+    </div>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="password_confirm">Confirm Password</label>
+            <input type="password" id="password_confirm" class="form-control" placeholder="Confirm your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="registerBtn">
+            <span>Register</span>
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 25px;">
+        <p style="color: var(--text-medium); font-size: 0.95rem;">Already have an account? <a href="/login/" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (isAuthenticated()) {
+            window.location.href = '/dashboard/';
+        }
+
+        const form = document.getElementById('registerForm');
+        const btn = document.getElementById('registerBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const password_confirm = document.getElementById('password_confirm').value;
+
+            // Client-side validation
+            if (password !== password_confirm) {
+                showToast('Passwords do not match.', 'error');
+                return;
+            }
+            
+            // Show loading
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div>';
+            btn.disabled = true;
+
+            try {
+                // Assessment Requirement: Call existing /api/register/ endpoint
+                await apiFetch('register/', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, email, password, password_confirm })
+                });
+
+                showToast('Registration successful! Please login.', 'success');
+                setTimeout(() => window.location.href = '/login/', 1500);
+                
+            } catch (error) {
+                let msg = error.message;
+                // Make field names more user friendly
+                msg = msg.replace('password_confirm:', 'Password Confirmation:');
+                msg = msg.replace('username:', 'Username:');
+                msg = msg.replace('email:', 'Email:');
+                
+                showToast(msg, 'error');
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        });
+    });
+</script>
+{% endblock %}

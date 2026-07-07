@@ -1,0 +1,145 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Home | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+    .hero-content {
+        flex: 1;
+    }
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-medium);
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .hero-img-circle {
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 150px;
+        box-shadow: var(--shadow-lg);
+        animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 40px;
+        color: var(--text-dark);
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+    .feature-card {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+    }
+    .feature-card:hover .feature-icon {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .cta-section {
+        background: var(--gradient-primary);
+        border-radius: var(--radius-lg);
+        padding: 60px 40px;
+        text-align: center;
+        color: white;
+        box-shadow: var(--shadow-lg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <div class="badge badge-primary" style="margin-bottom: 15px; display: inline-block;">🚀 Premium Food Delivery</div>
+        <h1 class="hero-title">Delicious Food,<br>Delivered Fast.</h1>
+        <p class="hero-subtitle">Experience the best local restaurants with our seamless and lightning-fast delivery service. Order now and satisfy your cravings in minutes.</p>
+        <div style="display: flex; gap: 15px;">
+            <a href="/categories/" class="btn btn-primary" style="padding: 14px 30px; font-size: 1.1rem;">Order Now <i class="fas fa-arrow-right"></i></a>
+            <a href="/register/" class="btn btn-outline" style="padding: 14px 30px; font-size: 1.1rem; border-width: 2px;">Sign Up</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-img-circle">
+            🍔
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title">Why Choose Us?</h2>
+<div class="features-grid">
+    <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Lightning Fast</h3>
+        <p style="color: var(--text-medium); margin-top: 10px;">Our optimized routing algorithms ensure your food arrives hot and fresh, always on time.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+        <h3>Top Restaurants</h3>
+        <p style="color: var(--text-medium); margin-top: 10px;">We partner exclusively with the highest-rated local restaurants and premium chefs.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <h3>Live Tracking</h3>
+        <p style="color: var(--text-medium); margin-top: 10px;">Watch your order travel in real-time with our advanced GPS tracking system.</p>
+    </div>
+</div>
+
+<div class="cta-section">
+    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Ready to order?</h2>
+    <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Join thousands of satisfied customers who trust us with their daily meals. Registration takes less than a minute.</p>
+    <a href="/register/" class="btn" style="background: white; color: var(--primary); padding: 14px 40px; font-size: 1.1rem; font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">Create an Account</a>
+</div>
+{% endblock %}

@@ -1,0 +1,278 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Orders | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .table-container {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        padding: 20px;
+        overflow-x: auto;
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .table th, .table td {
+        padding: 16px 20px;
+        text-align: left;
+        border-bottom: 1px solid #F1F5F9;
+    }
+    .table th {
+        color: var(--text-light);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        background: #F8FAFC;
+    }
+    .table tr:hover {
+        background: #F8FAFC;
+    }
+    
+    .filters-bar {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .order-items-list {
+        margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-medium);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="page-header">
+        <div>
+            <h1>My Orders</h1>
+            <p style="color: var(--text-medium);">Track and manage your recent orders.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateOrderModal()">
+            <i class="fas fa-plus"></i> Place New Order
+        </button>
+    </div>
+
+    <div class="table-container">
+        <div class="filters-bar">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Order ID..." style="max-width: 200px;">
+            <select id="statusFilter" class="form-control" style="max-width: 200px;">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="delivered">Delivered</option>
+            </select>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Delivery Address</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ordersBody">
+                <tr><td colspan="7" style="text-align: center; padding: 40px;"><div class="spinner" style="border-top-color: var(--primary);"></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create Order Modal -->
+<div class="modal-overlay" id="orderModalOverlay">
+    <div class="modal">
+        <h2 style="margin-bottom: 20px;">Place New Order</h2>
+        <form id="orderForm">
+            <div class="form-group">
+                <label class="form-label">Menu Item</label>
+                <select id="menuItemSelect" class="form-control" required>
+                    <option value="">Loading items...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <input type="number" id="orderQuantity" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Delivery Address</label>
+                <input type="text" id="orderAddress" class="form-control" placeholder="123 Main St, City" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                <button type="button" class="btn btn-outline" onclick="closeOrderModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="submitOrderBtn">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let allOrders = [];
+    let menuItemsCache = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!isAuthenticated()) {
+            window.location.href = '/login/';
+            return;
+        }
+
+        await loadOrders();
+
+        // Setup filters
+        document.getElementById('searchInput').addEventListener('input', filterOrders);
+        document.getElementById('statusFilter').addEventListener('change', filterOrders);
+        
+        // Setup Form
+        document.getElementById('orderForm').addEventListener('submit', submitOrder);
+        
+        // Check for URL parameter to auto-open modal
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('add')) {
+            openCreateOrderModal(urlParams.get('add'));
+        }
+    });
+
+    async function loadOrders() {
+        try {
+            const data = await apiFetch('orders/');
+            allOrders = data.results || data;
+            filterOrders();
+        } catch (error) {
+            showToast('Failed to load orders', 'error');
+        }
+    }
+
+    function filterOrders() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const status = document.getElementById('statusFilter').value;
+
+        let filtered = allOrders;
+        if (term) filtered = filtered.filter(o => o.id.toString().includes(term));
+        if (status) filtered = filtered.filter(o => o.status === status);
+
+        renderOrders(filtered);
+    }
+
+    function renderOrders(orders) {
+        const tbody = document.getElementById('ordersBody');
+        
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-medium);">No orders found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = orders.map(order => {
+            const statusClass = order.status === 'pending' ? 'badge-warning' : 
+                              (order.status === 'delivered' ? 'badge-success' : 'badge-primary');
+            
+            const itemsHtml = `<li>${order.item_name || 'Item'} (x${order.quantity})</li>`;
+
+            return `
+                <tr>
+                    <td style="font-weight: 600;">#ORD-${order.id}</td>
+                    <td>${new Date(order.created_at).toLocaleString()}</td>
+                    <td><ul class="order-items-list">${itemsHtml}</ul></td>
+                    <td>${order.delivery_address}</td>
+                    <td style="font-weight: 700; color: var(--primary-dark);">$${order.total_price}</td>
+                    <td><span class="badge ${statusClass}">${order.status.toUpperCase()}</span></td>
+                    <td>
+                        ${order.status === 'pending' ? 
+                            `<button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;" onclick="deleteOrder(${order.id})"><i class="fas fa-trash"></i> Cancel</button>` 
+                            : '<span style="color: var(--text-light); font-size: 0.8rem;">No actions</span>'
+                        }
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    async function openCreateOrderModal(preselectId = null) {
+        document.getElementById('orderModalOverlay').style.display = 'flex';
+        
+        // Load menu items if not loaded
+        if (menuItemsCache.length === 0) {
+            try {
+                const data = await apiFetch('menu-items/');
+                menuItemsCache = data.results || data;
+            } catch (e) {
+                showToast('Could not load menu items', 'error');
+            }
+        }
+        
+        const select = document.getElementById('menuItemSelect');
+        select.innerHTML = menuItemsCache.map(i => 
+            `<option value="${i.id}" ${i.id == preselectId ? 'selected' : ''}>${i.name} ($${i.price})</option>`
+        ).join('');
+    }
+
+    function closeOrderModal() {
+        document.getElementById('orderModalOverlay').style.display = 'none';
+        document.getElementById('orderForm').reset();
+    }
+
+    async function submitOrder(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitOrderBtn');
+        const oldText = btn.innerHTML;
+        btn.innerHTML = '<div class="spinner"></div>';
+        btn.disabled = true;
+
+        const menuItemId = document.getElementById('menuItemSelect').value;
+        const quantity = document.getElementById('orderQuantity').value;
+        const address = document.getElementById('orderAddress').value;
+
+        try {
+            // Assessment Requirement: Fetch user to get customer_name for OrderSerializer
+            const meData = await apiFetch('me/');
+            
+            const payload = {
+                item: parseInt(menuItemId),
+                quantity: parseInt(quantity),
+                delivery_address: address,
+                customer_name: meData.username || 'Customer'
+            };
+
+            await apiFetch('orders/', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            showToast('Order placed successfully!', 'success');
+            closeOrderModal();
+            loadOrders(); // Refresh table
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            btn.innerHTML = oldText;
+            btn.disabled = false;
+        }
+    }
+
+    async function deleteOrder(id) {
+        if (!confirm('Are you sure you want to cancel this order?')) return;
+        
+        try {
+            await apiFetch(`orders/${id}/`, { method: 'DELETE' });
+            showToast('Order cancelled successfully', 'success');
+            loadOrders();
+        } catch (error) {
+            showToast('Failed to cancel order: ' + error.message, 'error');
+        }
+    }
+</script>
+{% endblock %}

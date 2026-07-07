@@ -1,0 +1,127 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Categories | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .category-card {
+        padding: 30px 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+    .category-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    .category-card:hover .category-icon {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.1);
+    }
+    .category-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .category-desc {
+        color: var(--text-medium);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="page-header">
+        <div>
+            <h1>Menu Categories</h1>
+            <p style="color: var(--text-medium);">Browse our delicious offerings</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search categories..." style="width: 250px;">
+        </div>
+    </div>
+
+    <div id="loader" style="text-align: center; padding: 50px;">
+        <div class="spinner" style="border-top-color: var(--primary); width: 40px; height: 40px; border-width: 4px;"></div>
+    </div>
+
+    <div class="categories-grid" id="categoriesGrid" style="display: none;">
+        <!-- Categories injected here -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let allCategories = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const data = await apiFetch('categories/');
+            allCategories = data.results || data;
+            renderCategories(allCategories);
+            
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('categoriesGrid').style.display = 'grid';
+        } catch (error) {
+            showToast('Failed to load categories', 'error');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCategories.filter(c => c.name.toLowerCase().includes(term));
+            renderCategories(filtered);
+        });
+    });
+
+    function renderCategories(categories) {
+        const grid = document.getElementById('categoriesGrid');
+        if (categories.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-medium);">No categories found.</div>';
+            return;
+        }
+
+        const icons = ['fa-pizza-slice', 'fa-hamburger', 'fa-coffee', 'fa-ice-cream', 'fa-carrot', 'fa-drumstick-bite'];
+
+        grid.innerHTML = categories.map((cat, index) => {
+            const iconClass = icons[index % icons.length];
+            return `
+                <a href="/menu-items/?category=${cat.id}" class="glass-card category-card">
+                    <div class="category-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <h3 class="category-title">${cat.name}</h3>
+                    <p class="category-desc">Explore our freshly prepared ${cat.name.toLowerCase()} menu items.</p>
+                </a>
+            `;
+        }).join('');
+    }
+</script>
+{% endblock %}

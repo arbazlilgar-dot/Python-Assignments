@@ -1,0 +1,220 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Menu | FoodDelivery{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .filters-bar {
+        background: white;
+        padding: 15px 20px;
+        border-radius: var(--radius-md);
+        margin-bottom: 30px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        box-shadow: var(--shadow-sm);
+    }
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    .menu-card {
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .menu-img {
+        height: 200px;
+        background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+        position: relative;
+    }
+    .menu-details {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .menu-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .menu-cat {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 15px;
+    }
+    .menu-desc {
+        font-size: 0.95rem;
+        color: var(--text-medium);
+        margin-bottom: 20px;
+        line-height: 1.5;
+        flex: 1;
+    }
+    .menu-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #F1F5F9;
+    }
+    .menu-price {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="page-header">
+        <div>
+            <h1>Our Menu</h1>
+            <p style="color: var(--text-medium);">Discover our delicious selection of meals.</p>
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search menu..." style="flex: 1;">
+        <select id="categoryFilter" class="form-control" style="width: 200px;">
+            <option value="">All Categories</option>
+        </select>
+    </div>
+
+    <div id="loader" style="text-align: center; padding: 50px;">
+        <div class="spinner" style="border-top-color: var(--primary); width: 40px; height: 40px; border-width: 4px;"></div>
+    </div>
+
+    <div class="menu-grid" id="menuGrid" style="display: none;">
+        <!-- Items injected here -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let allItems = [];
+    let allCategories = [];
+    
+    // Emoji mapping for food images
+    const foodEmojis = ['🍔', '🍕', '🥗', '🍝', '🍣', '🌮', '🥪', '🥩', '🍰', '☕'];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Check URL for category filter
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+
+            const [itemsData, catsData] = await Promise.all([
+                apiFetch('menu-items/'),
+                apiFetch('categories/')
+            ]);
+
+            allItems = itemsData.results || itemsData;
+            allCategories = catsData.results || catsData;
+
+            // Populate category filter
+            const catSelect = document.getElementById('categoryFilter');
+            allCategories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.name;
+                catSelect.appendChild(opt);
+            });
+
+            if (categoryParam) {
+                catSelect.value = categoryParam;
+            }
+
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('menuGrid').style.display = 'grid';
+            
+            filterAndRender();
+
+        } catch (error) {
+            showToast('Failed to load menu items', 'error');
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterAndRender);
+        document.getElementById('categoryFilter').addEventListener('change', filterAndRender);
+    });
+
+    function filterAndRender() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const catFilter = document.getElementById('categoryFilter').value;
+
+        let filtered = allItems;
+        if (searchTerm) {
+            filtered = filtered.filter(item => item.name.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm));
+        }
+        if (catFilter) {
+            filtered = filtered.filter(item => item.category == catFilter);
+        }
+
+        renderItems(filtered);
+    }
+
+    function renderItems(items) {
+        const grid = document.getElementById('menuGrid');
+        if (items.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-medium);">No menu items found.</div>';
+            return;
+        }
+
+        grid.innerHTML = items.map((item, idx) => {
+            const cat = allCategories.find(c => c.id === item.category);
+            const catName = cat ? cat.name : 'Uncategorized';
+            const emoji = foodEmojis[item.id % foodEmojis.length];
+            const badge = item.is_available 
+                ? '<span class="badge badge-success" style="position: absolute; top: 15px; right: 15px;">Available</span>'
+                : '<span class="badge badge-warning" style="position: absolute; top: 15px; right: 15px;">Sold Out</span>';
+
+            return `
+                <div class="glass-card menu-card">
+                    <div class="menu-img">
+                        ${emoji}
+                        ${badge}
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-cat">${catName}</div>
+                        <h3 class="menu-title">${item.name}</h3>
+                        <p class="menu-desc">${item.description}</p>
+                        <div class="menu-footer">
+                            <div class="menu-price">$${item.price}</div>
+                            <button class="btn btn-primary" onclick="addToOrder(${item.id})" ${!item.is_available ? 'disabled style="opacity: 0.5;"' : ''}>
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function addToOrder(id) {
+        if (!isAuthenticated()) {
+            showToast('Please login to place orders.', 'warning');
+            setTimeout(() => window.location.href = '/login/', 1500);
+            return;
+        }
+        // Simplified cart experience: redirect to orders with pre-filled item
+        window.location.href = `/orders/?add=${id}`;
+    }
+</script>
+{% endblock %}

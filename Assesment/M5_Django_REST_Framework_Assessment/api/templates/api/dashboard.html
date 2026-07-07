@@ -1,0 +1,814 @@
+<!--
+====================================================
+M5 Django REST Framework Assessment
+Project: food_delivery_api
+
+Premium API Dashboard
+====================================================
+Modern SaaS-quality dashboard with:
+- Statistics cards with icons and gradients
+- Recent orders table
+- Category overview
+- Quick action buttons
+- Glassmorphism design
+- Smooth animations
+- Responsive layout
+====================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Food Delivery REST API - Premium Dashboard">
+    <title>Dashboard — Food Delivery API</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --primary-light: #3B82F6;
+            --secondary: #38BDF8;
+            --accent: #06B6D4;
+            --bg: #F8FAFC;
+            --bg-dark: #0F172A;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-dark: #1E293B;
+            --text-medium: #475569;
+            --text-light: #94A3B8;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --gradient-primary: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
+            --gradient-success: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+            --gradient-danger: linear-gradient(135deg, #EF4444 0%, #F97316 100%);
+            --gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            --gradient-dark: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08);
+            --shadow-xl: 0 20px 40px -5px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+
+        /* ====================================================
+           NAVBAR
+           ==================================================== */
+        .navbar {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 2rem;
+            animation: slideDown 0.4s ease;
+        }
+
+        .navbar-inner {
+            max-width: 1400px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 68px;
+        }
+
+        .navbar-brand {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: white; font-weight: 700; font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover { transform: scale(1.03); }
+
+        .logo-icon {
+            width: 42px; height: 42px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        }
+
+        .navbar-brand .brand-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav {
+            display: flex; align-items: center; gap: 4px; list-style: none;
+        }
+
+        .navbar-nav a {
+            color: rgba(255,255,255,0.65); text-decoration: none;
+            padding: 8px 16px; border-radius: var(--radius-sm);
+            font-size: 0.88rem; font-weight: 500;
+            transition: all 0.3s; display: flex; align-items: center; gap: 7px;
+        }
+
+        .navbar-nav a:hover { color: white; background: rgba(255,255,255,0.08); }
+        .navbar-nav a.active { color: white; background: rgba(37,99,235,0.3); }
+
+        .btn-nav {
+            background: var(--gradient-primary) !important;
+            color: white !important; padding: 8px 20px !important;
+            border-radius: 50px !important; font-weight: 600 !important;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+
+        /* ====================================================
+           HERO SECTION
+           ==================================================== */
+        .hero {
+            background: var(--gradient-primary);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            padding: 3rem 2rem;
+            position: relative; overflow: hidden;
+        }
+
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-inner {
+            max-width: 1400px; margin: 0 auto; position: relative; z-index: 1;
+        }
+
+        .hero h1 {
+            color: white; font-size: 2rem; font-weight: 800;
+            margin-bottom: 0.5rem; animation: fadeInUp 0.5s ease;
+        }
+
+        .hero p {
+            color: rgba(255,255,255,0.85); font-size: 1.05rem;
+            animation: fadeInUp 0.5s ease 0.1s both;
+        }
+
+        .hero-badges {
+            display: flex; gap: 10px; margin-top: 1.2rem; flex-wrap: wrap;
+            animation: fadeInUp 0.5s ease 0.2s both;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 0.78rem; font-weight: 600;
+            background: rgba(255,255,255,0.15); color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* ====================================================
+           MAIN CONTENT
+           ==================================================== */
+        .main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        /* ====================================================
+           STATS GRID
+           ==================================================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem; margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white; border-radius: var(--radius-lg);
+            padding: 1.5rem; box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative; overflow: hidden;
+            animation: fadeInUp 0.5s ease both;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card::after {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 100px; height: 100px; border-radius: 50%;
+            opacity: 0.08; transform: translate(30px, -30px);
+        }
+
+        .stat-card:nth-child(1)::after { background: var(--primary); }
+        .stat-card:nth-child(2)::after { background: var(--success); }
+        .stat-card:nth-child(3)::after { background: var(--warning); }
+        .stat-card:nth-child(4)::after { background: var(--danger); }
+
+        .stat-card .stat-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card .stat-icon {
+            width: 48px; height: 48px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: white;
+        }
+
+        .stat-card:nth-child(1) .stat-icon { background: var(--gradient-primary); }
+        .stat-card:nth-child(2) .stat-icon { background: var(--gradient-success); }
+        .stat-card:nth-child(3) .stat-icon { background: var(--gradient-warning); }
+        .stat-card:nth-child(4) .stat-icon { background: var(--gradient-danger); }
+
+        .stat-card .stat-label {
+            font-size: 0.82rem; color: var(--text-light); font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem; font-weight: 800; color: var(--text-dark);
+            animation: countUp 0.6s ease both;
+        }
+
+        .stat-card .stat-change {
+            font-size: 0.78rem; font-weight: 600; margin-top: 4px;
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        .stat-change.positive { color: var(--success); }
+        .stat-change.info { color: var(--primary); }
+
+        /* ====================================================
+           CONTENT GRID (Table + Sidebar)
+           ==================================================== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease 0.3s both;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .card:hover { box-shadow: var(--shadow-lg); }
+
+        .card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .card-header h2 {
+            font-size: 1rem; font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .card-header h2 i { color: var(--primary); font-size: 0.95rem; }
+
+        .card-header .badge {
+            padding: 4px 12px; border-radius: 50px;
+            font-size: 0.72rem; font-weight: 700;
+            background: rgba(37,99,235,0.1); color: var(--primary);
+        }
+
+        .card-body { padding: 1.5rem; }
+
+        /* ====================================================
+           TABLE
+           ==================================================== */
+        .table-wrapper { overflow-x: auto; }
+
+        .modern-table {
+            width: 100%; border-collapse: collapse; font-size: 0.88rem;
+        }
+
+        .modern-table thead th {
+            padding: 12px 16px; text-align: left;
+            font-size: 0.75rem; font-weight: 700;
+            color: var(--text-light); text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #F8FAFC; border-bottom: 2px solid #E2E8F0;
+            position: sticky; top: 0;
+        }
+
+        .modern-table td {
+            padding: 14px 16px; border-bottom: 1px solid #F1F5F9;
+            color: var(--text-medium); vertical-align: middle;
+        }
+
+        .modern-table tr { transition: background 0.2s; }
+        .modern-table tbody tr:hover { background: rgba(37,99,235,0.02); }
+        .modern-table tbody tr:last-child td { border-bottom: none; }
+
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+
+        .status-pending { background: rgba(245,158,11,0.1); color: #D97706; }
+        .status-confirmed { background: rgba(37,99,235,0.1); color: #2563EB; }
+        .status-preparing { background: rgba(168,85,247,0.1); color: #7C3AED; }
+        .status-out_for_delivery { background: rgba(6,182,212,0.1); color: #0891B2; }
+        .status-delivered { background: rgba(16,185,129,0.1); color: #059669; }
+        .status-cancelled { background: rgba(239,68,68,0.1); color: #DC2626; }
+
+        .item-cell {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .item-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.78rem; color: white;
+        }
+
+        /* ====================================================
+           SIDEBAR CARDS
+           ==================================================== */
+        .sidebar-cards { display: flex; flex-direction: column; gap: 1.2rem; }
+
+        .category-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid #F1F5F9;
+            transition: all 0.3s;
+        }
+
+        .category-item:last-child { border-bottom: none; }
+        .category-item:hover { padding-left: 8px; }
+
+        .category-item .cat-info {
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .category-item .cat-icon {
+            width: 40px; height: 40px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .category-item .cat-name { font-weight: 600; font-size: 0.9rem; }
+        .category-item .cat-count {
+            font-size: 0.78rem; color: var(--text-light);
+        }
+
+        .category-item .cat-badge {
+            padding: 4px 12px; border-radius: 50px;
+            font-size: 0.72rem; font-weight: 700;
+            background: #F1F5F9; color: var(--text-medium);
+        }
+
+        /* ====================================================
+           QUICK ACTIONS
+           ==================================================== */
+        .quick-actions {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem; margin-bottom: 2rem;
+            animation: fadeInUp 0.5s ease 0.4s both;
+        }
+
+        .action-card {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 1rem; background: white;
+            border: 2px solid #E2E8F0; border-radius: var(--radius-lg);
+            text-decoration: none; color: var(--text-dark);
+            transition: all 0.3s; text-align: center;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-card i {
+            font-size: 1.5rem; margin-bottom: 10px;
+            width: 52px; height: 52px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .action-card:hover i { transform: scale(1.1); animation: float 2s ease infinite; }
+
+        .action-card:nth-child(1) i { background: rgba(37,99,235,0.1); color: var(--primary); }
+        .action-card:nth-child(2) i { background: rgba(16,185,129,0.1); color: var(--success); }
+        .action-card:nth-child(3) i { background: rgba(245,158,11,0.1); color: var(--warning); }
+        .action-card:nth-child(4) i { background: rgba(168,85,247,0.1); color: #8B5CF6; }
+        .action-card:nth-child(5) i { background: rgba(6,182,212,0.1); color: var(--accent); }
+        .action-card:nth-child(6) i { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+        .action-card .action-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+        .action-card .action-desc { font-size: 0.75rem; color: var(--text-light); }
+
+        /* ====================================================
+           EMPTY STATE
+           ==================================================== */
+        .empty-state {
+            text-align: center; padding: 3rem 1rem;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem; color: var(--text-light);
+            margin-bottom: 1rem; animation: float 3s ease infinite;
+        }
+
+        .empty-state h3 { color: var(--text-medium); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .empty-state p { color: var(--text-light); font-size: 0.88rem; }
+
+        /* ====================================================
+           ENDPOINTS CARD
+           ==================================================== */
+        .endpoint-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 0; border-bottom: 1px solid #F1F5F9;
+        }
+
+        .endpoint-item:last-child { border-bottom: none; }
+
+        .endpoint-method {
+            padding: 3px 10px; border-radius: 4px;
+            font-size: 0.68rem; font-weight: 700;
+            min-width: 55px; text-align: center;
+            font-family: var(--font-mono);
+        }
+
+        .method-g { background: rgba(16,185,129,0.15); color: #059669; }
+        .method-p { background: rgba(37,99,235,0.15); color: #2563EB; }
+        .method-u { background: rgba(245,158,11,0.15); color: #D97706; }
+        .method-d { background: rgba(239,68,68,0.15); color: #DC2626; }
+
+        .endpoint-path {
+            font-family: var(--font-mono); font-size: 0.82rem;
+            color: var(--text-medium);
+        }
+
+        /* ====================================================
+           FOOTER
+           ==================================================== */
+        .footer {
+            background: var(--bg-dark); color: rgba(255,255,255,0.6);
+            padding: 2.5rem 2rem; text-align: center; margin-top: 2rem;
+        }
+
+        .footer .footer-brand { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .footer .footer-brand span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .footer p { font-size: 0.82rem; }
+        .footer a { color: var(--secondary); text-decoration: none; }
+        .footer a:hover { color: white; }
+
+        /* ====================================================
+           RESPONSIVE
+           ==================================================== */
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 1rem; }
+            .navbar-nav { display: none; }
+            .hero { padding: 2rem 1rem; }
+            .hero h1 { font-size: 1.5rem; }
+            .main { padding: 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .quick-actions { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .quick-actions { grid-template-columns: 1fr; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="/api/" class="navbar-brand">
+                <div class="logo-icon">🍕</div>
+                <span class="brand-text">Food Delivery API</span>
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="/api/" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="/api/categories/"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="/api/menu-items/"><i class="fas fa-utensils"></i> Menu Items</a></li>
+                <li><a href="/api/orders/"><i class="fas fa-shopping-bag"></i> Orders</a></li>
+                <li><a href="/api/register/"><i class="fas fa-user-plus"></i> Register</a></li>
+                <li><a href="/admin/" class="btn-nav"><i class="fas fa-cog"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>🍕 Food Delivery REST API</h1>
+            <p>M5 Django REST Framework Assessment — Complete Industry-Level API</p>
+            <div class="hero-badges">
+                <span class="hero-badge"><i class="fas fa-shield-alt"></i> Token Auth</span>
+                <span class="hero-badge"><i class="fas fa-filter"></i> Filtering</span>
+                <span class="hero-badge"><i class="fas fa-pager"></i> Pagination</span>
+                <span class="hero-badge"><i class="fas fa-lock"></i> Permissions</span>
+                <span class="hero-badge"><i class="fas fa-map-marker-alt"></i> Geocoding</span>
+                <span class="hero-badge"><i class="fas fa-check-double"></i> Validation</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-tags"></i></div>
+                </div>
+                <div class="stat-label">Total Categories</div>
+                <div class="stat-value">{{ total_categories }}</div>
+                <div class="stat-change info"><i class="fas fa-layer-group"></i> Food categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+                </div>
+                <div class="stat-label">Menu Items</div>
+                <div class="stat-value">{{ total_menu_items }}</div>
+                <div class="stat-change positive"><i class="fas fa-check-circle"></i> {{ available_items }} available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+                </div>
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-value">{{ total_orders }}</div>
+                <div class="stat-change info"><i class="fas fa-clock"></i> {{ pending_orders }} pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                </div>
+                <div class="stat-label">Delivered</div>
+                <div class="stat-value">{{ delivered_orders }}</div>
+                <div class="stat-change positive"><i class="fas fa-check-double"></i> Completed orders</div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <a href="/api/categories/" class="action-card">
+                <i class="fas fa-tags"></i>
+                <div class="action-title">Categories API</div>
+                <div class="action-desc">Browse & manage categories</div>
+            </a>
+            <a href="/api/menu-items/" class="action-card">
+                <i class="fas fa-utensils"></i>
+                <div class="action-title">Menu Items API</div>
+                <div class="action-desc">Full CRUD operations</div>
+            </a>
+            <a href="/api/orders/" class="action-card">
+                <i class="fas fa-shopping-bag"></i>
+                <div class="action-title">Orders API</div>
+                <div class="action-desc">ModelViewSet + Router</div>
+            </a>
+            <a href="/api/register/" class="action-card">
+                <i class="fas fa-user-plus"></i>
+                <div class="action-title">Register</div>
+                <div class="action-desc">Create new account</div>
+            </a>
+            <a href="/api-token-auth/" class="action-card">
+                <i class="fas fa-key"></i>
+                <div class="action-title">Get Token</div>
+                <div class="action-desc">Authentication endpoint</div>
+            </a>
+            <a href="/admin/" class="action-card">
+                <i class="fas fa-cog"></i>
+                <div class="action-title">Admin Panel</div>
+                <div class="action-desc">Django admin interface</div>
+            </a>
+        </div>
+
+        <!-- CONTENT GRID -->
+        <div class="content-grid">
+            <!-- Recent Orders Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-clock"></i> Recent Orders</h2>
+                    <span class="badge">{{ total_orders }} total</span>
+                </div>
+                <div class="table-wrapper">
+                    {% if recent_orders %}
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td><strong>#{{ order.id }}</strong></td>
+                                <td>
+                                    <div class="item-cell">
+                                        <div class="item-avatar" style="background: var(--gradient-primary);">
+                                            {{ order.customer_name|first }}
+                                        </div>
+                                        {{ order.customer_name }}
+                                    </div>
+                                </td>
+                                <td>{{ order.item.name }}</td>
+                                <td>×{{ order.quantity }}</td>
+                                <td>
+                                    <span class="status-pill status-{{ order.status }}">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>No Orders Yet</h3>
+                        <p>Orders will appear here once customers start placing them.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar-cards">
+                <!-- Categories -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-tags"></i> Categories</h2>
+                        <span class="badge">{{ categories|length }}</span>
+                    </div>
+                    <div class="card-body">
+                        {% if categories %}
+                            {% for cat in categories %}
+                            <div class="category-item">
+                                <div class="cat-info">
+                                    <div class="cat-icon" style="background: rgba(37,99,235,0.08);">
+                                        🍽️
+                                    </div>
+                                    <div>
+                                        <div class="cat-name">{{ cat.name }}</div>
+                                        <div class="cat-count">{{ cat.menu_items.count }} items</div>
+                                    </div>
+                                </div>
+                                <span class="cat-badge">{{ cat.menu_items.count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-state">
+                                <div class="empty-icon">🏷️</div>
+                                <h3>No Categories</h3>
+                                <p>Add categories via the API.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- API Endpoints Reference -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-code"></i> API Endpoints</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-g">GET</span>
+                            <span class="endpoint-path">/api/categories/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-g">GET</span>
+                            <span class="endpoint-path">/api/menu-items/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-p">POST</span>
+                            <span class="endpoint-path">/api/menu-items/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-g">GET</span>
+                            <span class="endpoint-path">/api/orders/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-p">POST</span>
+                            <span class="endpoint-path">/api/orders/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-p">POST</span>
+                            <span class="endpoint-path">/api/register/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-p">POST</span>
+                            <span class="endpoint-path">/api-token-auth/</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="endpoint-method method-p">POST</span>
+                            <span class="endpoint-path">/api/geocode/</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-brand"><span>🍕 Food Delivery REST API</span></div>
+        <p>M5 Django REST Framework Assessment</p>
+        <p style="margin-top: 0.5rem;">
+            Built with <a href="https://www.django-rest-framework.org/" target="_blank">Django REST Framework</a>
+            &bull; <a href="/admin/">Admin</a>
+            &bull; <a href="/api/categories/">API</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.75rem; color: rgba(255,255,255,0.35);">
+            Assessment Concepts: REST Statelessness &bull; ModelSerializer &bull; Field Validation &bull;
+            APIView &bull; GenericAPIView &bull; ModelViewSet &bull; DefaultRouter &bull;
+            PageNumberPagination &bull; CursorPagination &bull; Filtering &bull;
+            Authentication &bull; Authorization &bull; Object Level Permission &bull; Google Maps Geocoding API
+        </p>
+    </footer>
+
+    <script>
+        // Animate stat values on load
+        document.querySelectorAll('.stat-value').forEach(el => {
+            const final = parseInt(el.textContent) || 0;
+            if (final === 0) return;
+            let current = 0;
+            const step = Math.max(1, Math.floor(final / 20));
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= final) { current = final; clearInterval(timer); }
+                el.textContent = current;
+            }, 40);
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .action-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
