@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7: Flexbox & Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            margin: 0;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        /* 1. Social Icons Flexbox */
+        .social-container {
+            display: flex;
+            justify-content: space-evenly; /* Equal spacing */
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .social-container img {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        .social-container img:hover {
+            transform: scale(1.1);
+        }
+
+        /* 2. Spotify Playlist Bar Flexbox */
+        .playlist-bar {
+            display: flex;
+            overflow-x: auto; /* Scroll horizontally if needed */
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+            gap: 15px;
+        }
+        .song-card {
+            display: flex;
+            align-items: center; /* Vertically center text */
+            background-color: #282828;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            min-width: 200px;
+            gap: 15px;
+        }
+        .song-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        .song-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .song-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .song-artist {
+            color: #b3b3b3;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* 3 & 4. Flipkart Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns desktop */
+            gap: 20px;
+        }
+        .product-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: box-shadow 0.3s;
+        }
+        .product-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .product-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .product-price {
+            color: #2874f0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* 4. Media Queries for Responsive Grid */
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns tablet */
+            }
+        }
+        @media (max-width: 600px) {
+            .product-grid {
+                grid-template-columns: 1fr; /* 1 column mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>1. Social Icons (Flexbox - justify-content)</h2>
+    <div class="social-container">
+        <img src="https://via.placeholder.com/60/E1306C/FFFFFF?text=IG" alt="Instagram">
+        <img src="https://via.placeholder.com/60/25D366/FFFFFF?text=WA" alt="WhatsApp">
+        <img src="https://via.placeholder.com/60/cb202d/FFFFFF?text=Zom" alt="Zomato">
+        <img src="https://via.placeholder.com/60/1DB954/FFFFFF?text=Spot" alt="Spotify">
+    </div>
+
+    <h2>2. Playlist Bar (Flexbox - align-items)</h2>
+    <div class="playlist-bar">
+        <div class="song-card">
+            <img src="https://via.placeholder.com/50/333/fff" alt="Album Art">
+            <div class="song-info">
+                <span class="song-title">Blinding Lights</span>
+                <span class="song-artist">The Weeknd</span>
+            </div>
+        </div>
+        <div class="song-card">
+            <img src="https://via.placeholder.com/50/333/fff" alt="Album Art">
+            <div class="song-info">
+                <span class="song-title">Levitating</span>
+                <span class="song-artist">Dua Lipa</span>
+            </div>
+        </div>
+        <div class="song-card">
+            <img src="https://via.placeholder.com/50/333/fff" alt="Album Art">
+            <div class="song-info">
+                <span class="song-title">Starboy</span>
+                <span class="song-artist">The Weeknd</span>
+            </div>
+        </div>
+        <div class="song-card">
+            <img src="https://via.placeholder.com/50/333/fff" alt="Album Art">
+            <div class="song-info">
+                <span class="song-title">Peaches</span>
+                <span class="song-artist">Justin Bieber</span>
+            </div>
+        </div>
+        <div class="song-card">
+            <img src="https://via.placeholder.com/50/333/fff" alt="Album Art">
+            <div class="song-info">
+                <span class="song-title">Stay</span>
+                <span class="song-artist">The Kid LAROI</span>
+            </div>
+        </div>
+    </div>
+
+    <h2>3 & 4. Responsive Product Grid (CSS Grid)</h2>
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 1">
+            <div class="product-title">Wireless Mouse</div>
+            <div class="product-price">&#8377; 599</div>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 2">
+            <div class="product-title">Gaming Keyboard</div>
+            <div class="product-price">&#8377; 1,299</div>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 3">
+            <div class="product-title">HD Monitor 24"</div>
+            <div class="product-price">&#8377; 8,500</div>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 4">
+            <div class="product-title">USB-C Hub</div>
+            <div class="product-price">&#8377; 999</div>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 5">
+            <div class="product-title">Webcam 1080p</div>
+            <div class="product-price">&#8377; 2,499</div>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/200" alt="Product 6">
+            <div class="product-title">Noise Cancelling Headphones</div>
+            <div class="product-price">&#8377; 4,999</div>
+        </div>
+    </div>
+
+</body>
+</html>

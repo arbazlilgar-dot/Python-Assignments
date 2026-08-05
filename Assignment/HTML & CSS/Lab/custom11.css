@@ -1,0 +1,12 @@
+/* Custom CSS to override Bootstrap styles for Session 11 */
+
+/* 4. Override the Bootstrap primary button color to a custom shade (Purple) */
+.btn-primary {
+    background-color: #6f42c1 !important; 
+    border-color: #6f42c1 !important;
+}
+
+.btn-primary:hover {
+    background-color: #59339d !important;
+    border-color: #59339d !important;
+}

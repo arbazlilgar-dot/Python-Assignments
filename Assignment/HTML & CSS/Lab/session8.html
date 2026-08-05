@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 1. Meta viewport tag for responsive scaling on mobile devices -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8: Responsive Design</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f3f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Default Layout: Desktop (> 1200px) */
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex; /* Horizontal Layout by default */
+            flex-direction: row;
+            max-width: 1000px;
+            width: 100%;
+            padding: 40px; /* Padding for desktop */
+            font-size: 20px; /* Font size for desktop */
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .product-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .product-image-container img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .product-title {
+            color: #212121;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            font-size: 1.5em; 
+        }
+
+        .product-price {
+            color: #388e3c;
+            font-weight: bold;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .product-desc {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .buy-btn {
+            background-color: #ff9f00;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            align-self: flex-start;
+            transition: background-color 0.3s;
+        }
+        .buy-btn:hover {
+            background-color: #e08c00;
+        }
+
+        /* Note Container Styling for Task 4 */
+        .testing-note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 1000px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        /* 3. Breakpoint 1: max-width 1200px (Large Tablet / Small Desktop) */
+        @media only screen and (max-width: 1200px) {
+            .product-card {
+                padding: 30px; /* Reduced padding */
+                font-size: 18px; /* Slightly smaller font */
+                max-width: 850px;
+            }
+        }
+
+        /* 3. Breakpoint 2: max-width 900px (Tablet) */
+        @media only screen and (max-width: 900px) {
+            .product-card {
+                padding: 20px; /* Reduced padding */
+                font-size: 16px; /* Smaller font */
+                max-width: 700px;
+            }
+            .product-title {
+                font-size: 1.4em;
+            }
+        }
+
+        /* 2. & 3. Breakpoint 3: max-width 600px (Mobile) */
+        @media only screen and (max-width: 600px) {
+            .product-card {
+                flex-direction: column; /* Switch to Vertical Layout */
+                padding: 15px; /* Minimum padding */
+                font-size: 14px; /* Smallest font */
+                max-width: 100%;
+            }
+            .product-image-container img {
+                max-width: 250px;
+            }
+            .buy-btn {
+                align-self: stretch; /* Full width button on mobile */
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 4. Test Note replacing screenshot requirement -->
+    <div class="testing-note">
+        <strong>Task 4 Responsive Testing Note:</strong><br>
+        - <strong>Desktop (> 1200px):</strong> Layout is horizontal. Padding is 40px, font is 20px.<br>
+        - <strong>Small Desktop (<= 1200px):</strong> Layout is horizontal. Padding drops to 30px, font to 18px.<br>
+        - <strong>Tablet (<= 900px):</strong> Layout is horizontal. Padding drops to 20px, font to 16px.<br>
+        - <strong>Mobile (<= 600px):</strong> Layout switches to VERTICAL (image on top, details below). Padding drops to 15px, font to 14px. Button becomes full width.
+    </div>
+
+    <!-- Responsive Product Card -->
+    <div class="product-card">
+        <div class="product-image-container">
+            <img src="https://via.placeholder.com/400x300/ff9f00/ffffff?text=Smart+TV" alt="Smart TV">
+        </div>
+        <div class="product-details">
+            <h1 class="product-title">Ultra HD 4K Smart LED TV (55 Inch)</h1>
+            <div class="product-price">&#8377; 45,999</div>
+            <p class="product-desc">Experience vibrant colors and stunning details with this 55-inch Ultra HD 4K Smart TV. Comes with built-in streaming apps, Dolby Audio, and voice control support.</p>
+            <button class="buy-btn">Add to Cart</button>
+        </div>
+    </div>
+
+</body>
+</html>

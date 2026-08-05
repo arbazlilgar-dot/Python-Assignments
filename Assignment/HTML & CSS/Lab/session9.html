@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 9: Bootstrap Basics</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light pb-5">
+    
+    <div class="container mt-5">
+        <h2 class="mb-4">1. Flipkart-style Product Grid (3 side by side)</h2>
+        <div class="row g-4">
+            <!-- Using col-md-4 creates 3 equal columns on medium+ screens -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://via.placeholder.com/300x200?text=Product+1" class="card-img-top" alt="Product 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Smartphone Pro</h5>
+                        <p class="card-text text-primary fw-bold">$499</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://via.placeholder.com/300x200?text=Product+2" class="card-img-top" alt="Product 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Wireless Headphones</h5>
+                        <p class="card-text text-primary fw-bold">$199</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://via.placeholder.com/300x200?text=Product+3" class="card-img-top" alt="Product 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Smartwatch Series 5</h5>
+                        <p class="card-text text-primary fw-bold">$299</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">2 & 4. Zomato Restaurant List (Mobile Friendly)</h2>
+        <!-- 4. Refactoring to stack on mobile using col-12 for xs and col-md-6 for md -->
+        <div class="row g-4">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm border-0 p-3 h-100">
+                    <h4 class="card-title text-danger">The Spice Route</h4>
+                    <p class="card-text text-muted">Authentic Indian cuisine with a modern twist. Known for great curries and exceptional service.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm border-0 p-3 h-100">
+                    <h4 class="card-title text-danger">Burger Joint</h4>
+                    <p class="card-text text-muted">The best classic American burgers and fries in the city. Made fresh every day.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">3. BookMyShow Movie Details</h2>
+        <div class="row align-items-center bg-white p-4 shadow-sm rounded">
+            <!-- Movie Poster Column -->
+            <div class="col-md-4 text-center">
+                <img src="https://via.placeholder.com/300x400?text=Movie+Poster" class="img-fluid rounded shadow" alt="Movie Poster">
+            </div>
+            <!-- Movie Details Column -->
+            <div class="col-md-8 mt-4 mt-md-0">
+                <h1 class="fw-bold">Avengers: Endgame</h1>
+                <p class="lead text-secondary">Action, Sci-Fi | 3h 1min</p>
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-success fs-6 me-2">9.5/10</span>
+                    <span class="text-muted">450k ratings</span>
+                </div>
+                <p>After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe.</p>
+                <button class="btn btn-danger btn-lg px-5 rounded-pill shadow-sm mt-3">Book Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

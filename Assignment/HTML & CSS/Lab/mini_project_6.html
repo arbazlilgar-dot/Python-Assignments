@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project 6: Social Bio Link Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* -----------------------------------------
+           TASK 2: Gamer Tag Bio Link Styles 
+           ----------------------------------------- */
+        .gamer-bio-section {
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+            border-radius: 20px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            max-width: 450px;
+            margin: 0 auto 50px auto;
+            text-align: center;
+        }
+        .gamer-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .gamer-link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .gamer-link-btn:hover {
+            transform: translateY(-4px);
+            color: white;
+        }
+        .btn-twitch { background-color: #9146FF; box-shadow: 0 4px 15px rgba(145, 70, 255, 0.4); }
+        .btn-discord { background-color: #5865F2; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); }
+        .btn-steam { background-color: #171a21; box-shadow: 0 4px 15px rgba(23, 26, 33, 0.4); border: 1px solid #66c0f4; }
+
+        /* -----------------------------------------
+           TASK 3 & 4: Form and Preview Card Styles 
+           ----------------------------------------- */
+        
+        /* Task 3: Icon inside input box */
+        .input-icon-wrapper {
+            position: relative;
+        }
+        .input-icon-wrapper .bi {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            pointer-events: none;
+        }
+        .input-icon-wrapper input {
+            padding-left: 50px; /* Space for the icon */
+            height: 50px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        /* Task 4: Preview Cards - Distinct styling for platforms */
+        .preview-card {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            transition: transform 0.2s;
+        }
+        .preview-card:hover {
+            transform: translateY(-3px);
+        }
+        /* Distinct Borders */
+        .preview-spotify { border-left: 6px solid #1DB954; }
+        .preview-youtube { border-left: 6px solid #FF0000; }
+        .preview-apple { border-left: 6px solid #fa243c; }
+        .preview-instagram { border-left: 6px solid #E1306C; }
+        .preview-linkedin { border-left: 6px solid #0077B5; }
+
+        .platform-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .platform-icon {
+            font-size: 2.5rem;
+        }
+        
+        /* Responsive tweaks */
+        @media (max-width: 576px) {
+            .preview-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .platform-info {
+                flex-direction: column;
+            }
+            .preview-card .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5 fw-bold text-dark">Mini Project 6: Bio Link UI</h1>
+
+        <!-- ==============================================
+             TASK 2: Gamer Tag Bio Link Page
+             ============================================== -->
+        <h3 class="mb-4 text-center">Task 2: Gamer Tag Bio Page</h3>
+        <div class="gamer-bio-section">
+            <img src="https://via.placeholder.com/130x130/000000/00d2ff?text=Ninja" alt="Gamer Avatar" class="gamer-avatar">
+            <h2 class="fw-bold mb-1">NinjaPro_X</h2>
+            <p class="text-info mb-4 fw-semibold">Professional Esports Player & Streamer</p>
+
+            <div class="d-flex flex-column gap-3">
+                <a href="#" class="gamer-link-btn btn-twitch">
+                    <i class="bi bi-twitch me-2"></i> Follow on Twitch
+                </a>
+                <a href="#" class="gamer-link-btn btn-discord">
+                    <i class="bi bi-discord me-2"></i> Join Discord
+                </a>
+                <a href="#" class="gamer-link-btn btn-steam">
+                    <i class="bi bi-controller me-2"></i> Add on Steam
+                </a>
+            </div>
+        </div>
+
+        <hr class="my-5" style="border-color: #ccc;">
+
+        <!-- ==============================================
+             TASKS 1 & 3: Form for Music and Social Links
+             ============================================== -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h3 class="mb-4 text-center">Tasks 1 & 3: Link Input Form</h3>
+                
+                <div class="card shadow-lg border-0 p-4 mb-5 rounded-4">
+                    <!-- Task 1: form called musicLinksForm -->
+                    <form id="musicLinksForm">
+                        
+                        <h5 class="mb-3 text-secondary fw-bold">Music Profiles</h5>
+                        
+                        <!-- Task 3: Platform icons inside input box -->
+                        <div class="input-icon-wrapper mb-3">
+                            <i class="bi bi-spotify text-success"></i>
+                            <input type="url" id="spotifyUrl" class="form-control" placeholder="Spotify Profile URL (e.g. https://spotify.com/user)">
+                        </div>
+
+                        <div class="input-icon-wrapper mb-3">
+                            <i class="bi bi-youtube text-danger"></i>
+                            <input type="url" id="youtubeUrl" class="form-control" placeholder="YouTube Music URL">
+                        </div>
+
+                        <div class="input-icon-wrapper mb-4">
+                            <i class="bi bi-apple text-dark"></i>
+                            <input type="url" id="appleUrl" class="form-control" placeholder="Apple Music URL">
+                        </div>
+
+                        <h5 class="mb-3 text-secondary fw-bold">Social Profiles</h5>
+
+                        <div class="input-icon-wrapper mb-3">
+                            <i class="bi bi-instagram" style="color: #E1306C;"></i>
+                            <input type="url" id="instagramUrl" class="form-control" placeholder="Instagram Profile URL">
+                        </div>
+
+                        <div class="input-icon-wrapper mb-4">
+                            <i class="bi bi-linkedin" style="color: #0077B5;"></i>
+                            <input type="url" id="linkedinUrl" class="form-control" placeholder="LinkedIn Profile URL">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold rounded-pill shadow">Generate Preview Cards</button>
+                    </form>
+                </div>
+
+                <!-- ==============================================
+                     TASK 4: Preview Cards Section
+                     ============================================== -->
+                <div id="previewCardsContainer" class="mt-4">
+                    <h3 class="text-center mb-4 d-none fw-bold" id="previewTitle">Task 4: Generated Previews</h3>
+                    <!-- Cards will be injected here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript to handle form submission and generate preview cards -->
+    <script>
+        document.getElementById('musicLinksForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+
+            const container = document.getElementById('previewCardsContainer');
+            const title = document.getElementById('previewTitle');
+            
+            // Clear existing previews except the title element
+            container.innerHTML = '';
+            container.appendChild(title);
+            title.classList.remove('d-none'); // Show title once submitted
+
+            // Mapping inputs to their UI properties
+            const platforms = [
+                { id: 'spotifyUrl', name: 'Spotify', icon: 'bi-spotify', colorClass: 'text-success', cardClass: 'preview-spotify', btnClass: 'btn-success' },
+                { id: 'youtubeUrl', name: 'YouTube Music', icon: 'bi-youtube', colorClass: 'text-danger', cardClass: 'preview-youtube', btnClass: 'btn-danger' },
+                { id: 'appleUrl', name: 'Apple Music', icon: 'bi-apple', colorClass: 'text-dark', cardClass: 'preview-apple', btnClass: 'btn-dark' },
+                { id: 'instagramUrl', name: 'Instagram', icon: 'bi-instagram', colorClass: 'text-danger', cardClass: 'preview-instagram', btnClass: 'btn-danger' },
+                { id: 'linkedinUrl', name: 'LinkedIn', icon: 'bi-linkedin', colorClass: 'text-primary', cardClass: 'preview-linkedin', btnClass: 'btn-primary' }
+            ];
+
+            let cardsGenerated = false;
+
+            platforms.forEach(platform => {
+                const urlInput = document.getElementById(platform.id).value;
+                if (urlInput.trim() !== '') {
+                    cardsGenerated = true;
+                    // Task 4: Extract username/handle from the URL
+                    const handle = extractUsername(urlInput);
+                    
+                    // Create HTML for visually distinct preview card
+                    const cardHTML = `
+                        <div class="preview-card ${platform.cardClass} shadow">
+                            <div class="platform-info">
+                                <i class="bi ${platform.icon} platform-icon ${platform.colorClass}"></i>
+                                <div class="text-start">
+                                    <h4 class="mb-0 fw-bold">${platform.name}</h4>
+                                    <span class="text-muted fw-semibold">@${handle}</span>
+                                </div>
+                            </div>
+                            <a href="${urlInput}" target="_blank" class="btn ${platform.btnClass} rounded-pill px-5 py-2 fw-bold shadow-sm">Visit</a>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                }
+            });
+
+            if (!cardsGenerated) {
+                container.insertAdjacentHTML('beforeend', '<div class="alert alert-warning text-center mt-3 fw-bold">Please enter at least one URL to generate a preview card.</div>');
+            }
+        });
+
+        // Helper function to extract username/handle from a URL
+        function extractUsername(url) {
+            try {
+                // Prepend protocol if missing to allow URL parsing
+                if (!url.startsWith('http')) {
+                    url = 'https://' + url;
+                }
+                const urlObj = new URL(url);
+                // Split path and remove empty segments (e.g., trailing slashes)
+                const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0);
+                
+                // Return the last segment as the handle, default to 'profile' if empty
+                if (pathParts.length > 0) {
+                    return pathParts[pathParts.length - 1];
+                }
+                return 'profile';
+            } catch (error) {
+                return 'user';
+            }
+        }
+    </script>
+</body>
+</html>

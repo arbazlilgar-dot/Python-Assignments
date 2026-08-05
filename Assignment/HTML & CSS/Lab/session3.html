@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Order Form</title>
+</head>
+<body>
+    <h2>Order Your Food</h2>
+    
+    <!-- POST method used for form submission -->
+    <form action="/submit-order" method="POST">
+        
+        <label for="order_id">Order ID:</label>
+        <!-- The Order ID field is disabled because the user should not be able to change or tamper with their automatically generated unique order number. -->
+        <input type="text" id="order_id" name="order_id" value="ORD12345" disabled>
+        <br><br>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br><br>
+
+        <label for="food">Select Food:</label>
+        <select id="food" name="food" required>
+            <option value="">--Please choose an option--</option>
+            <option value="pizza">Pizza</option>
+            <option value="burger">Burger</option>
+            <option value="pasta">Pasta</option>
+        </select>
+        <br><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+        <br><br>
+
+        <label for="instructions">Delivery Instructions:</label><br>
+        <textarea id="instructions" name="instructions" rows="4" cols="30" required></textarea>
+        <br><br>
+
+        <input type="submit" value="Place Order">
+    </form>
+</body>
+</html>
